@@ -5,7 +5,6 @@
   import { ListView, LoadingBar, Button, TextInputField, Toast, Toaster, SoftwareKey, TextInputDialog, OptionMenu, MultiSelector } from '../components';
   import { onMount, onDestroy } from 'svelte';
 
-  import { base64url } from "rfc4648";
   import { Buffer } from 'buffer';
   import { Api, AuthKey, client, session, cachedDatabase } from '../utils/bootstrap';
 
