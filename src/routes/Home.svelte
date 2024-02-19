@@ -665,13 +665,10 @@
 
   async function handleWebWorkerMessage(data: any) {
     try {
-      // console.log('dispatchMessageToClient:', data.type);
       switch (data.type) {
         case -1:
-          // console.error('Error', data.params);
           break;
         case 0:
-          // console.log('Connected to authenticationWebWorker');
           break;
         case 1:
           console.log('authenticationWebWorker.client.event:', data.params);
@@ -689,7 +686,6 @@
         case 2:
           if (loadingBar)
             loadingBar.$destroy();
-          // console.log('sendCode:', data.params.phoneCodeHash);
           phoneCodeHash = data.params.phoneCodeHash;
           resetCursor();
           break;
@@ -702,7 +698,6 @@
         case 3:
           if (loadingBar)
             loadingBar.$destroy();
-          // console.log('signIn:', data.params.session.authKey, data.params.session.dcId);
           resetCursor();
           phoneCodeHash = null;
           if (data.params.session) {
@@ -732,7 +727,6 @@
         case 4:
           if (loadingBar)
             loadingBar.$destroy();
-          // console.log('signIn2FA:', data.params);
           if (password2FA) {
             password2FA.$destroy();
           }
@@ -760,7 +754,6 @@
         case 6:
           if (loadingBar)
             loadingBar.$destroy();
-          // console.log('exportLoginToken:', data.params);
           if (data.params.result.className.toLocaleLowerCase() === 'auth.LoginTokenSuccess'.toLocaleLowerCase()) {
             resetCursor();
             phoneCodeHash = null;
@@ -786,7 +779,6 @@
         case -6:
           if (loadingBar)
             loadingBar.$destroy();
-          // console.log('exportLoginToken:', data.params);
           if (data.params !== 'SESSION_PASSWORD_NEEDED') {
             console.error('exportLoginToken:', data.params);
             toastMessage(data.params || "ERROR EXPORT LOGIN TOKEN"); // TODO DEBUG
@@ -795,7 +787,6 @@
           signIn2FA();
           break;
         case 7:
-          // console.log('importLoginToken:', data.params);
           resetCursor();
           phoneCodeHash = null;
           if (data.params.session) {
