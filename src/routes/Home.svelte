@@ -18,8 +18,6 @@
 
   const navClass: string = 'homeNav';
 
-  export let location: any;
-  export let navigate: any;
   export let getAppProp: Function;
 
   let loadingBar: LoadingBar;
