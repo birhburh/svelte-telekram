@@ -30,7 +30,7 @@
   }
 
   onMount(() => {
-    // console.log(message);
+    
   });
 
 </script>

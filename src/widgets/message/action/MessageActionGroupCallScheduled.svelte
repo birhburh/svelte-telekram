@@ -11,7 +11,7 @@
 
   let dt: bool|string = false;
   onMount(() => {
-    // console.log(message);
+    
     try {
       dt = new Date(message.action.scheduleDate * 1000).toLocaleString();
     } catch (err) {

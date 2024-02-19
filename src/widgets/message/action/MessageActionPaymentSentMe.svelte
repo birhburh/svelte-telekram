@@ -10,7 +10,7 @@
   export let fetchMessageCallback: Function = (id: number) => {}
 
   onMount(() => {
-    // console.log(message);
+    
   });
 
 </script>
