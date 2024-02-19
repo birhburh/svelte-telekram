@@ -767,7 +767,7 @@
               alert('Please re-launch the app');
               window.close();
             }
-          } else if (['auth.logintoken', 'auth.logintokensuccess', 'auth.logintokenmigrateto'].indexOf(data.params.result.className.toLocaleLowerCase() > -1)) {
+          } else if (['auth.logintoken', 'auth.logintokensuccess', 'auth.logintokenmigrateto'].indexOf(data.params.result.className.toLocaleLowerCase()) > -1) {
             importLoginToken(data.params.result.token);
           } else {
             console.error('importLoginToken', data.params.result);
