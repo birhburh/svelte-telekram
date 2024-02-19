@@ -36,7 +36,7 @@
   let uncachedThumbnails;
   let unauthorizedUser;
 
-  let webWorkerStatus: bool = false;
+  let webWorkerStatus: boolean = false;
   let name: string = 'Telekram';
   let phoneNumber = '';
   let phoneCode = '';
