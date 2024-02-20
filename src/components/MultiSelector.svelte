@@ -7,7 +7,7 @@
 
   export let title: string = 'Single Selector';
   export let focusIndex: number = 0;
-  export let options: { title: string, subtitle: string, checked: boolean }[];
+  export let options: { title: string, subtitle?: string, checked: boolean }[];
   export let softKeyLeftText: string = '';
   export let softKeyCenterTextSelect: string = 'SELECT';
   export let softKeyCenterTextDeselect: string = 'DESELECT';
