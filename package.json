@@ -7,7 +7,7 @@
     "dev": "rollup -c -w",
     "start": "sirv public --no-clear",
     "svelte-check": "svelte-check --tsconfig ./tsconfig.json",
-    "check-format": "prettier .",
+    "check-format": "prettier -c .",
     "format": "prettier --write ."
   },
   "devDependencies": {
