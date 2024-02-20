@@ -2,7 +2,7 @@
   import { Router, Route, Link } from "svelte-navigator";
   import { AppBar, SoftwareKey } from "./components";
   import { Home, Room } from "./routes";
-  import { onMount, onDestroy } from "svelte";
+  import { onMount } from "svelte";
   import { Localization } from "./utils/localization";
 
   export let localization = new Localization("en-US", "langs");
