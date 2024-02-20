@@ -6,7 +6,6 @@ A Telegram client for KaiOS using Svelte and TypeScript. Forked from [arma7x](ht
 
 `npm run dev` builds the app in watch mode and serves the site. Great for testing your app in a desktop browser.
 
-
 #### Source code style
 
 The code is automatically styled via prettier. [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
