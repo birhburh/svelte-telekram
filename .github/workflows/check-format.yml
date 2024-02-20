@@ -1,0 +1,23 @@
+name: Build
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+      - name: Build
+        run: |
+          npm install
+          echo "APP_ID=123456" >> .env
+          echo "APP_HASH=1a2b3c4d5e6f7g" >> .env        
+          npm run build
