@@ -1,7 +1,7 @@
 <script lang="ts">
   export let title: string = "Svelte";
 
-  let visible: bool = true;
+  let visible: boolean = true;
 
   export function setTitleText(text) {
     title = text;

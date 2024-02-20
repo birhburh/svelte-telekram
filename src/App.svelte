@@ -6,8 +6,8 @@
   import { Localization } from "./utils/localization";
 
   export let localization = new Localization("en-US", "langs");
-  export let appBar;
-  export let softwareKey;
+  export let appBar = null;
+  export let softwareKey = null;
 
   export const getAppProp = () => {
     return { appBar, softwareKey, localization };
