@@ -6,7 +6,9 @@
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "start": "sirv public --no-clear",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "svelte-check": "svelte-check --tsconfig ./tsconfig.json",
+    "check-format": "prettier .",
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "@babel/core": "^7.17.2",
