@@ -72,7 +72,6 @@
   let phoneNumber = "";
   let phoneCode = "";
   let phoneCodeHash = null;
-  let qrCode = null;
   let authStatus: boolean = false;
   let archivedChatList = [];
   let archivedChatListName = [];
@@ -95,7 +94,7 @@
       if (inputSoftwareKey || qrModal || password2FA) return;
       const navClasses = document.getElementsByClassName(navClass);
       if (navClasses[this.verticalNavIndex] != null) {
-        navClasses[this.verticalNavIndex].click();
+        (navClasses[this.verticalNavIndex] as HTMLElement).click();
       }
     },
     backspaceListener: function (evt) {},
