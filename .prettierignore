@@ -1,1 +1,5 @@
 public
+node_modules/
+public/build/*.css
+public/build/*.js
+public/build/*.map
