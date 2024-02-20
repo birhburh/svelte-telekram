@@ -62,7 +62,7 @@ client.addEventHandler((evt) => {
   }
 });
 
-export function initilize() {
+export function initialize() {
   let tm = setTimeout(() => {
     alert("Please re-launch the app");
     window.close();
@@ -81,7 +81,7 @@ export function initilize() {
     });
 }
 
-initilize();
+initialize();
 
 export async function fetchUser() {
   const result = await client.invoke(
