@@ -216,7 +216,7 @@
       console.log(result);
     } catch (err) {
       if (err.errorMessage === "TAKEOUT_REQUIRED") {
-        getContactsFallback();
+        getSavedContactsFallback();
       }
     }
   }
