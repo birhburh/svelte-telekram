@@ -1,17 +1,19 @@
-<script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator } from '../utils/navigation';
-  import SoftwareKey from './SoftwareKey.svelte';
-  import ListView from './ListView.svelte';
-  import Checkbox from './Checkbox.svelte';
+<svelte:options accessors immutable={true} />
 
-  export let title: string = 'Single Selector';
+<script lang="ts">
+  import { onMount, onDestroy } from "svelte";
+  import { createKaiNavigator } from "../utils/navigation";
+  import SoftwareKey from "./SoftwareKey.svelte";
+  import ListView from "./ListView.svelte";
+  import Checkbox from "./Checkbox.svelte";
+
+  export let title: string = "Single Selector";
   export let focusIndex: number = 0;
-  export let options: { title: string, subtitle?: string, checked: boolean }[];
-  export let softKeyLeftText: string = '';
-  export let softKeyCenterTextSelect: string = 'SELECT';
-  export let softKeyCenterTextDeselect: string = 'DESELECT';
-  export let softKeyRightText: string = '';
+  export let options: { title: string; subtitle?: string; checked: boolean }[];
+  export let softKeyLeftText: string = "";
+  export let softKeyCenterTextSelect: string = "SELECT";
+  export let softKeyCenterTextDeselect: string = "DESELECT";
+  export let softKeyRightText: string = "";
   export let onBackspace: Function = (evt, scope) => {};
   export let onSoftkeyLeft: Function = (evt, scope) => {};
   export let onSoftkeyRight: Function = (evt, scope) => {};
@@ -22,46 +24,43 @@
     title = text;
   }
 
-  const navClass: string = 'singleSelectorNav';
+  const navClass: string = "singleSelectorNav";
   let softwareKey: SoftwareKey;
 
   let navOptions = {
     verticalNavClass: navClass,
-    softkeyLeftListener: function(evt) {
-      if (onSoftkeyLeft == null)
-        return;
-      onSoftkeyLeft(evt, {options});
+    softkeyLeftListener: function (evt) {
+      if (onSoftkeyLeft == null) return;
+      onSoftkeyLeft(evt, { options });
     },
-    softkeyRightListener: function(evt) {
-      if (onSoftkeyRight == null)
-        return;
-      onSoftkeyRight(evt, {options});
+    softkeyRightListener: function (evt) {
+      if (onSoftkeyRight == null) return;
+      onSoftkeyRight(evt, { options });
     },
-    enterListener: function(evt) {
+    enterListener: function (evt) {
       const navClasses = document.getElementsByClassName(navClass);
       if (navClasses[this.verticalNavIndex] != null) {
-        const children = navClasses[this.verticalNavIndex].children
+        const children = navClasses[this.verticalNavIndex].children;
         const keys = Object.keys(children);
         for (var c in keys) {
           children[c].click();
         }
       }
     },
-    backspaceListener: function(evt) {
-      if (onBackspace == null)
-        return;
-      onBackspace(evt, {options});
+    backspaceListener: function (evt) {
+      if (onBackspace == null) return;
+      onBackspace(evt, { options });
     },
-    arrowUpListener: function(evt) {
+    arrowUpListener: function (evt) {
       evt.preventDefault();
       this.navigateListNav(-1);
       renderCenterKey(this.verticalNavIndex);
     },
-    arrowDownListener: function(evt) {
+    arrowDownListener: function (evt) {
       evt.preventDefault();
       this.navigateListNav(1);
       renderCenterKey(this.verticalNavIndex);
-    }
+    },
   };
 
   let navInstance = createKaiNavigator(navOptions);
@@ -86,32 +85,38 @@
       props: {
         isInvert: true,
         leftText: softKeyLeftText,
-        centerText: '',
-        rightText: softKeyRightText
-      }
+        centerText: "",
+        rightText: softKeyRightText,
+      },
     });
     renderCenterKey(focusIndex);
     onOpened();
-  })
+  });
 
   onDestroy(() => {
     navInstance.detachListener();
     softwareKey.$destroy();
-    onClosed({options});
-  })
-
+    onClosed({ options });
+  });
 </script>
-
-<svelte:options accessors immutable={true}/>
 
 <div class="kai-option-menu">
   <div class="kai-option-menu-content">
     <div class="kai-option-menu-header">{title}</div>
     <div class="kai-option-menu-body" data-pad-top="66" data-pad-bottom="30">
       {#each options as option, i}
-      <ListView className="{navClass}" title="{option.title}" subtitle="{option.subtitle}">
-        <Checkbox slot="rightWidget" key={i} checked="{option.checked}" onChange={onCheckboxChange} />
-      </ListView>
+        <ListView
+          className={navClass}
+          title={option.title}
+          subtitle={option.subtitle}
+        >
+          <Checkbox
+            slot="rightWidget"
+            key={i}
+            checked={option.checked}
+            onChange={onCheckboxChange}
+          />
+        </ListView>
       {/each}
     </div>
   </div>

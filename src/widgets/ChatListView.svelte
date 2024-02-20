@@ -1,17 +1,19 @@
-<script lang="ts">
+<svelte:options accessors immutable={true} />
 
-  export let key:any = '';
-  export let icon: string = '';
+<script lang="ts">
+  export let key: any = "";
+  export let icon: string = "";
   export let chat: any = {};
   export let className: string = null;
   export let userId: string = null;
-  export let onClick: Function = (evt) => {}
-
+  export let onClick: Function = (evt) => {};
 </script>
 
-<svelte:options accessors immutable={true}/>
-
-<div data-key="{key}" class="kai-list-view {className ? className : ''}" on:click={onClick}>
+<div
+  data-key={key}
+  class="kai-list-view {className ? className : ''}"
+  on:click={onClick}
+>
   <div class="kai-list-view-icon">{@html icon}</div>
   <div class="kai-list-view-content">
     <p>
@@ -19,22 +21,34 @@
     </p>
     <small>
       {#if chat.isGroup && userId === chat.message._sender.id.value.toString()}
-         <b>You</b><br>
+        <b>You</b><br />
       {:else if chat.isGroup}
-         <b>{chat.message._sender.firstName || chat.message._sender.lastName || chat.message._sender.username || chat.message._sender.id}</b><br>
+        <b
+          >{chat.message._sender.firstName ||
+            chat.message._sender.lastName ||
+            chat.message._sender.username ||
+            chat.message._sender.id}</b
+        ><br />
       {/if}
       {#if chat.message && chat.message.message}
-      {chat.message.message.substring(0, 25) + (chat.message.message.length > 25 ? '...' : '')}
+        {chat.message.message.substring(0, 25) +
+          (chat.message.message.length > 25 ? "..." : "")}
       {:else if chat.message.action}
-      {chat.message.action.className}
+        {chat.message.action.className}
       {:else}
-      {chat.message.media ? chat.message.media.className : chat.message.className}
+        {chat.message.media
+          ? chat.message.media.className
+          : chat.message.className}
       {/if}
     </small>
   </div>
   <div class="kai-list-view-indicator">
     {#if chat.unreadCount}
-      <span class="badge" style="background-color:{chat.entity.__muted ? '#c0c0c0' : '#008000'};">{chat.unreadCount}</span>
+      <span
+        class="badge"
+        style="background-color:{chat.entity.__muted ? '#c0c0c0' : '#008000'};"
+        >{chat.unreadCount}</span
+      >
     {/if}
     <span class="kai-icon-arrow"></span>
   </div>
@@ -79,8 +93,8 @@
     text-align: start;
     height: 20px;
     width: 100%;
-    white-space: pre-wrap!important;
-    word-break: break-word!important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: middle;
@@ -90,7 +104,7 @@
     margin-top: -3px;
     padding: 0px 0px 3px 0px;
     font-size: 12px;
-    color: #6A6A6A;
+    color: #6a6a6a;
     text-align: start;
     vertical-align: middle;
     max-height: 30px;

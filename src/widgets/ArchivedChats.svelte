@@ -1,18 +1,20 @@
+<svelte:options accessors immutable={true} />
+
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator } from '../utils/navigation';
-  import SoftwareKey from '../components/SoftwareKey.svelte';
-  import ChatListView from './ChatListView.svelte';
+  import { onMount, onDestroy } from "svelte";
+  import { createKaiNavigator } from "../utils/navigation";
+  import SoftwareKey from "../components/SoftwareKey.svelte";
+  import ChatListView from "./ChatListView.svelte";
 
-  const navClass: string = 'optionMenuNav';
+  const navClass: string = "optionMenuNav";
 
-  export let title: string = 'Option Menu';
+  export let title: string = "Option Menu";
   export let focusIndex: number = 0;
   export let options: Array<any>;
-  export let thumbs: { [key: string]: string; } = {};
-  export let softKeyLeftText: string = '';
-  export let softKeyCenterText: string = 'Close';
-  export let softKeyRightText: string = '';
+  export let thumbs: { [key: string]: string } = {};
+  export let softKeyLeftText: string = "";
+  export let softKeyCenterText: string = "Close";
+  export let softKeyRightText: string = "";
   export let onEnter: Function = (evt, scope) => {};
   export let onBackspace: Function = (evt, scope) => {};
   export let onSoftkeyLeft: Function = (evt, scope) => {};
@@ -28,26 +30,34 @@
 
   let navOptions = {
     verticalNavClass: navClass,
-    softkeyLeftListener: function(evt) {
-      if (onSoftkeyLeft == null)
-        return;
-      onSoftkeyLeft(evt, {index: this.verticalNavIndex, selected: options[this.verticalNavIndex]});
+    softkeyLeftListener: function (evt) {
+      if (onSoftkeyLeft == null) return;
+      onSoftkeyLeft(evt, {
+        index: this.verticalNavIndex,
+        selected: options[this.verticalNavIndex],
+      });
     },
-    softkeyRightListener: function(evt) {
-      if (onSoftkeyRight == null)
-        return;
-      onSoftkeyRight(evt, {index: this.verticalNavIndex, selected: options[this.verticalNavIndex]});
+    softkeyRightListener: function (evt) {
+      if (onSoftkeyRight == null) return;
+      onSoftkeyRight(evt, {
+        index: this.verticalNavIndex,
+        selected: options[this.verticalNavIndex],
+      });
     },
-    enterListener: function(evt) {
-      if (onEnter == null)
-        return;
-      onEnter(evt, {index: this.verticalNavIndex, selected: options[this.verticalNavIndex]});
+    enterListener: function (evt) {
+      if (onEnter == null) return;
+      onEnter(evt, {
+        index: this.verticalNavIndex,
+        selected: options[this.verticalNavIndex],
+      });
     },
-    backspaceListener: function(evt) {
-      if (onBackspace == null)
-        return;
-      onBackspace(evt, {index: this.verticalNavIndex, selected: options[this.verticalNavIndex]});
-    }
+    backspaceListener: function (evt) {
+      if (onBackspace == null) return;
+      onBackspace(evt, {
+        index: this.verticalNavIndex,
+        selected: options[this.verticalNavIndex],
+      });
+    },
   };
 
   let navInstance = createKaiNavigator(navOptions);
@@ -56,7 +66,11 @@
     if (thumbs[chat.iconRef]) {
       return `<img alt="icon" style="background-color:var(--themeColor);width:40px;height:40px;border-radius:50%;box-sizing:border-box;border: 2px solid #fff;"" src="${thumbs[chat.iconRef]}"/>`;
     }
-    return `<div style="display:flex;flex-direction:column;justify-content:center;align-items:center;font-weight:bold;color:#fff;background-color:var(--themeColor);width:40px;height:40px;border-radius:50%;box-sizing:border-box;border: 2px solid #fff;">${chat.name.split(' ').map(text => text[0]).splice(0, 2).join('')}</div>`;
+    return `<div style="display:flex;flex-direction:column;justify-content:center;align-items:center;font-weight:bold;color:#fff;background-color:var(--themeColor);width:40px;height:40px;border-radius:50%;box-sizing:border-box;border: 2px solid #fff;">${chat.name
+      .split(" ")
+      .map((text) => text[0])
+      .splice(0, 2)
+      .join("")}</div>`;
   }
 
   onMount(() => {
@@ -67,28 +81,32 @@
         isInvert: true,
         leftText: softKeyLeftText,
         centerText: softKeyCenterText,
-        rightText: softKeyRightText
-      }
+        rightText: softKeyRightText,
+      },
     });
     onOpened();
-  })
+  });
 
   onDestroy(() => {
     navInstance.detachListener();
     softwareKey.$destroy();
-    onClosed({index: navInstance.verticalNavIndex, selected: options[navInstance.verticalNavIndex]});
-  })
-
+    onClosed({
+      index: navInstance.verticalNavIndex,
+      selected: options[navInstance.verticalNavIndex],
+    });
+  });
 </script>
-
-<svelte:options accessors immutable={true}/>
 
 <div class="kai-option-menu">
   <div class="kai-option-menu-content">
     <div class="kai-option-menu-header">{title}</div>
     <div class="kai-option-menu-body" data-pad-top="66" data-pad-bottom="30">
       {#each options as option}
-      <ChatListView chat={option} className="{navClass}" icon={getThumb(option)} />
+        <ChatListView
+          chat={option}
+          className={navClass}
+          icon={getThumb(option)}
+        />
       {/each}
     </div>
   </div>

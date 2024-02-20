@@ -1,17 +1,19 @@
-<script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator } from '../utils/navigation';
-  import SoftwareKey from './SoftwareKey.svelte';
-  import TextAreaField from './TextAreaField.svelte';
+<svelte:options accessors />
 
-  export let title: string = 'TextInputDialog';
-  export let placeholder: string = '';
-  export let value: string = '';
-  export let type: string = 'text';
-  export let rows:number = 2;
-  export let softKeyLeftText: string = '';
-  export let softKeyCenterText: string = 'Close';
-  export let softKeyRightText: string = '';
+<script lang="ts">
+  import { onMount, onDestroy } from "svelte";
+  import { createKaiNavigator } from "../utils/navigation";
+  import SoftwareKey from "./SoftwareKey.svelte";
+  import TextAreaField from "./TextAreaField.svelte";
+
+  export let title: string = "TextInputDialog";
+  export let placeholder: string = "";
+  export let value: string = "";
+  export let type: string = "text";
+  export let rows: number = 2;
+  export let softKeyLeftText: string = "";
+  export let softKeyCenterText: string = "Close";
+  export let softKeyRightText: string = "";
   export let onEnter: Function = (evt, value: string) => {};
   export let onBackspace: Function = (evt, value: string) => {};
   export let onSoftkeyLeft: Function = (evt, value: string) => {};
@@ -22,45 +24,41 @@
   let nodeRef: any;
   let inputDOM: any;
   let softwareKey: SoftwareKey;
-  let returnValue: string = '';
+  let returnValue: string = "";
 
   export function setTitleText(text) {
     title = text;
   }
 
   let navOptions = {
-    arrowUpListener: function(evt) {
+    arrowUpListener: function (evt) {
       evt.stopPropagation();
     },
-    arrowDownListener: function(evt) {
+    arrowDownListener: function (evt) {
       evt.stopPropagation();
     },
-    arrowLeftListener: function(evt) {
+    arrowLeftListener: function (evt) {
       evt.stopPropagation();
     },
-    arrowRightListener: function(evt) {
+    arrowRightListener: function (evt) {
       evt.stopPropagation();
     },
-    softkeyLeftListener: function(evt) {
-      if (onSoftkeyLeft == null)
-        return;
+    softkeyLeftListener: function (evt) {
+      if (onSoftkeyLeft == null) return;
       onSoftkeyLeft(evt, returnValue);
     },
-    softkeyRightListener: function(evt) {
-      if (onSoftkeyRight == null)
-        return;
+    softkeyRightListener: function (evt) {
+      if (onSoftkeyRight == null) return;
       onSoftkeyRight(evt, returnValue);
     },
-    enterListener: function(evt) {
-      if (onEnter == null)
-        return;
+    enterListener: function (evt) {
+      if (onEnter == null) return;
       onEnter(evt, returnValue);
     },
-    backspaceListener: function(evt) {
-      if (onBackspace == null)
-        return;
+    backspaceListener: function (evt) {
+      if (onBackspace == null) return;
       onBackspace(evt, returnValue);
-    }
+    },
   };
 
   let navInstance = createKaiNavigator(navOptions);
@@ -71,7 +69,8 @@
 
   function onFocus(evt) {
     evt.target.focus();
-    evt.target.selectionStart = evt.target.selectionEnd = (evt.target.value.length || evt.target.value.length);
+    evt.target.selectionStart = evt.target.selectionEnd =
+      evt.target.value.length || evt.target.value.length;
   }
 
   onMount(() => {
@@ -82,33 +81,38 @@
         isInvert: true,
         leftText: softKeyLeftText,
         centerText: softKeyCenterText,
-        rightText: softKeyRightText
-      }
+        rightText: softKeyRightText,
+      },
     });
     returnValue = value;
-    inputDOM = nodeRef.getElementsByTagName('TEXTAREA')[0];
+    inputDOM = nodeRef.getElementsByTagName("TEXTAREA")[0];
     setTimeout(() => {
       inputDOM.focus();
     }, 200);
     onOpened();
-  })
+  });
 
   onDestroy(() => {
     inputDOM.blur();
     navInstance.detachListener();
     softwareKey.$destroy();
     onClosed(returnValue);
-  })
-
+  });
 </script>
 
-<svelte:options accessors/>
-
-<div class="kai-dialog"bind:this={nodeRef}>
+<div class="kai-dialog" bind:this={nodeRef}>
   <div class="kai-dialog-content">
     <div class="kai-dialog-header">{title}</div>
     <div class="kai-dialog-body">
-      <TextAreaField label="{undefined}" placeholder="{placeholder}" rows={rows} value="{value}" type="{type}" {onInput} {onFocus}/>
+      <TextAreaField
+        label={undefined}
+        {placeholder}
+        {rows}
+        {value}
+        {type}
+        {onInput}
+        {onFocus}
+      />
     </div>
   </div>
 </div>
@@ -141,5 +145,6 @@
     background-color: #cccccc;
     font-weight: 200;
   }
-  .kai-dialog > .kai-dialog-content > .kai-dialog-body {}
+  .kai-dialog > .kai-dialog-content > .kai-dialog-body {
+  }
 </style>

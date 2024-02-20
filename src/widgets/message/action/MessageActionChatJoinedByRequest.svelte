@@ -1,42 +1,41 @@
 <script lang="ts">
+  import { onMount, onDestroy } from "svelte";
+  import { createKaiNavigator, KaiNavigator } from "../../../utils/navigation";
 
-  import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator, KaiNavigator } from '../../../utils/navigation';
-
-  import { Api, client } from '../../../utils/bootstrap';
+  import { Api, client } from "../../../utils/bootstrap";
 
   export let chat: any = {};
   export let message: any = {};
   export let parentNavInstance: typeof KaiNavigator;
-  export let callButtonCallback: Function = (id, callback) => {}
-  export let fetchMessageCallback: Function = (id: number) => {}
+  export let callButtonCallback: Function = (id, callback) => {};
+  export let fetchMessageCallback: Function = (id: number) => {};
 
-  let username: bool|string = false;
+  let username: bool | string = false;
 
   onMount(() => {
-    client.invoke(new Api.users.GetUsers({ id: [message.fromId.userId] }))
-    .then(users => {
-      if (users.length > 0) {
-        let u = '';
-        if (users[0].firstName)
-          u = users[0].firstName;
-        if (users[0].lastName)
-          u += ' ' + users[0].lastName;
-        if (u == '' && users[0].username)
-          u = users[0].username;
-        u = u == '' ? false : u;
-        username = u;
-      }
-    })
-    .catch(err => {
-      console.log("MessageActionChatJoinedByRequest:", err);
-    });
+    client
+      .invoke(new Api.users.GetUsers({ id: [message.fromId.userId] }))
+      .then((users) => {
+        if (users.length > 0) {
+          let u = "";
+          if (users[0].firstName) u = users[0].firstName;
+          if (users[0].lastName) u += " " + users[0].lastName;
+          if (u == "" && users[0].username) u = users[0].username;
+          u = u == "" ? false : u;
+          username = u;
+        }
+      })
+      .catch((err) => {
+        console.log("MessageActionChatJoinedByRequest:", err);
+      });
   });
-
 </script>
 
 <div class="MessageActionChatJoinedByRequest">
-  <p>{#if username}{username} {/if}was accepted to the group</p>
+  <p>
+    {#if username}{username}
+    {/if}was accepted to the group
+  </p>
 </div>
 
 <style>

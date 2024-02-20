@@ -1,30 +1,28 @@
-<script lang="ts">
+<svelte:options accessors immutable={true} />
 
-  import { onMount, onDestroy } from 'svelte';
-  import { getCachedThumbnails } from '../../../telegram';
-  import { createKaiNavigator, KaiNavigator } from '../../../utils/navigation';
+<script lang="ts">
+  import { onMount, onDestroy } from "svelte";
+  import { getCachedThumbnails } from "../../../telegram";
+  import { createKaiNavigator, KaiNavigator } from "../../../utils/navigation";
 
   export let chat: any = {};
   export let message: any = {};
   export let parentNavInstance: typeof KaiNavigator;
-  export let callButtonCallback: Function = (id, callback) => {}
-  export let fetchMessageCallback: Function = (id: number) => {}
+  export let callButtonCallback: Function = (id, callback) => {};
+  export let fetchMessageCallback: Function = (id: number) => {};
 
-  let src: string = '';
+  let src: string = "";
 
   onMount(() => {
-    const cached = getCachedThumbnails()
+    const cached = getCachedThumbnails();
     if (cached[message.action.photo.id.toString()])
       src = cached[message.action.photo.id.toString()];
   });
-
 </script>
-
-<svelte:options accessors immutable={true}/>
 
 <div class="MessageActionChatEditPhoto">
   <p>Photo updated</p>
-  <img alt="icon" src={src}/>
+  <img alt="icon" {src} />
 </div>
 
 <style>

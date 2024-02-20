@@ -1,19 +1,28 @@
 <script lang="ts">
-  export let className: string = '';
+  export let className: string = "";
   export let label: string = undefined;
-  export let value: string = '';
-  export let type: string = 'text';
-  export let placeholder: string = '';
-  export let onInput: Function = (evt) => {}
-  export let onFocus: Function = (evt) => {}
-  export let onBlur: Function = (evt) => {}
+  export let value: string = "";
+  export let type: string = "text";
+  export let placeholder: string = "";
+  export let onInput: Function = (evt) => {};
+  export let onFocus: Function = (evt) => {};
+  export let onBlur: Function = (evt) => {};
 </script>
 
 <div class="kai-text-input {className}">
   {#if label}
-  <label for={label.split(' ').join('-')}>{label}</label>
+    <label for={label.split(" ").join("-")}>{label}</label>
   {/if}
-  <input id={label && label.split(' ').join('-')} name={label} type={type} value={value} placeholder={placeholder} on:input={onInput} on:focus={onFocus} on:blur={onBlur}/>
+  <input
+    id={label && label.split(" ").join("-")}
+    name={label}
+    {type}
+    {value}
+    {placeholder}
+    on:input={onInput}
+    on:focus={onFocus}
+    on:blur={onBlur}
+  />
 </div>
 
 <style>

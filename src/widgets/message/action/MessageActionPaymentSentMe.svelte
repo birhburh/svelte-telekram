@@ -1,22 +1,21 @@
 <script lang="ts">
-
-  import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator, KaiNavigator } from '../../../utils/navigation';
+  import { onMount, onDestroy } from "svelte";
+  import { createKaiNavigator, KaiNavigator } from "../../../utils/navigation";
 
   export let chat: any = {};
   export let message: any = {};
   export let parentNavInstance: typeof KaiNavigator;
-  export let callButtonCallback: Function = (id, callback) => {}
-  export let fetchMessageCallback: Function = (id: number) => {}
+  export let callButtonCallback: Function = (id, callback) => {};
+  export let fetchMessageCallback: Function = (id: number) => {};
 
-  onMount(() => {
-    
-  });
-
+  onMount(() => {});
 </script>
 
 <div class="MessageActionPaymentSentMe">
-  <p>{message.action.className}: {message.action.currency}{message.action.totalAmount}</p>
+  <p>
+    {message.action.className}: {message.action.currency}{message.action
+      .totalAmount}
+  </p>
 </div>
 
 <style>

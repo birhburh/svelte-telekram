@@ -1,15 +1,19 @@
+<svelte:options accessors />
+
 <script lang="ts">
+  declare var QRCode: any;
 
-  declare var QRCode:any;
+  import { onMount, onDestroy } from "svelte";
+  import { createKaiNavigator } from "../utils/navigation";
+  import { SoftwareKey, Separator } from "../components";
+  import { Api, client } from "../utils/bootstrap";
 
-  import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator } from '../utils/navigation';
-  import { SoftwareKey, Separator } from '../components';
-  import { Api, client } from '../utils/bootstrap';
+  import {
+    dispatchMessageToClient,
+    dispatchMessageToWorker,
+  } from "../telegram";
 
-  import { dispatchMessageToClient, dispatchMessageToWorker } from '../telegram';
-
-  export let title: string = 'Log-In via QR Code';
+  export let title: string = "Log-In via QR Code";
   export let onBackspace: Function = (evt) => {};
   export let onOpened: Function = () => {};
   export let onClosed: Function = () => {};
@@ -19,12 +23,12 @@
   let regenerate: any = null;
 
   let navOptions = {
-    softkeyRightListener: function(evt) {
+    softkeyRightListener: function (evt) {
       onBackspace(evt);
     },
-    backspaceListener: function(evt) {
+    backspaceListener: function (evt) {
       onBackspace(evt);
-    }
+    },
   };
 
   let navInstance = createKaiNavigator(navOptions);
@@ -40,23 +44,23 @@
         if (qrcode) {
           qrcode.clear();
         }
-        const container = document.getElementById('qr-container');
-        container.textContent = '';
+        const container = document.getElementById("qr-container");
+        container.textContent = "";
         const _data = `tg://login?token=${btoa(String.fromCharCode.apply(null, data.params.token))}`;
         qrcode = new QRCode(container, {
           text: _data,
           width: 200,
           height: 200,
-          colorDark : "#000000",
-          colorLight : "#ffffff",
-          correctLevel : QRCode.CorrectLevel.H
+          colorDark: "#000000",
+          colorLight: "#ffffff",
+          correctLevel: QRCode.CorrectLevel.H,
         });
         regenerate = setTimeout(() => {
           exportLoginToken();
         }, 31000);
         break;
       case -5:
-        console.error('exportLoginToken:', data.params);
+        console.error("exportLoginToken:", data.params);
         break;
     }
   }
@@ -68,9 +72,9 @@
         apiId: parseInt(process.env.APP_ID),
         apiHash: process.env.APP_HASH,
         exceptIds: [],
-      }
-    }
-    dispatchMessageToWorker.emit('message', params);
+      },
+    };
+    dispatchMessageToWorker.emit("message", params);
   }
 
   onMount(() => {
@@ -79,15 +83,15 @@
       target: document.body,
       props: {
         isInvert: false,
-        leftText: '',
-        centerText: '',
-        rightText: 'Cancel'
-      }
+        leftText: "",
+        centerText: "",
+        rightText: "Cancel",
+      },
     });
     onOpened();
-    dispatchMessageToClient.addListener('message', handleWebWorkerMessage);
+    dispatchMessageToClient.addListener("message", handleWebWorkerMessage);
     exportLoginToken();
-  })
+  });
 
   onDestroy(() => {
     if (regenerate != null) {
@@ -96,12 +100,9 @@
     navInstance.detachListener();
     softwareKey.$destroy();
     onClosed();
-    dispatchMessageToClient.removeListener('message', handleWebWorkerMessage);
-  })
-
+    dispatchMessageToClient.removeListener("message", handleWebWorkerMessage);
+  });
 </script>
-
-<svelte:options accessors/>
 
 <div class="kai-dialog">
   <div class="kai-dialog-content">

@@ -1,8 +1,10 @@
-<script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator } from '../../../utils/navigation';
+<svelte:options accessors immutable={true} />
 
-  export let template: string = '';
+<script lang="ts">
+  import { onMount, onDestroy } from "svelte";
+  import { createKaiNavigator } from "../../../utils/navigation";
+
+  export let template: string = "";
   export let onEnter: Function = (evt) => {};
   export let onBackspace: Function = (evt) => {};
   export let onOpened: Function = () => {};
@@ -11,36 +13,34 @@
   let nodeRef;
 
   let navOptions = {
-    arrowUpListener: function(evt) {
+    arrowUpListener: function (evt) {
       nodeRef.scrollTop -= 20;
       evt.preventDefault();
       evt.stopPropagation();
     },
-    arrowDownListener: function(evt) {
+    arrowDownListener: function (evt) {
       nodeRef.scrollTop += 20;
       evt.preventDefault();
       evt.stopPropagation();
     },
-    arrowLeftListener: function(evt) {
+    arrowLeftListener: function (evt) {
       nodeRef.scrollLeft -= 20;
       evt.preventDefault();
       evt.stopPropagation();
     },
-    arrowRightListener: function(evt) {
+    arrowRightListener: function (evt) {
       nodeRef.scrollLeft += 20;
       evt.preventDefault();
       evt.stopPropagation();
     },
-    enterListener: function(evt) {
-      if (onEnter == null)
-        return;
+    enterListener: function (evt) {
+      if (onEnter == null) return;
       onEnter(evt);
     },
-    backspaceListener: function(evt) {
-      if (onBackspace == null)
-        return;
+    backspaceListener: function (evt) {
+      if (onBackspace == null) return;
       onBackspace(evt);
-    }
+    },
   };
 
   let navInstance = createKaiNavigator(navOptions);
@@ -48,20 +48,22 @@
   onMount(() => {
     navInstance.attachListener();
     onOpened();
-  })
+  });
 
   onDestroy(() => {
     navInstance.detachListener();
     onClosed();
-  })
-
+  });
 </script>
-
-<svelte:options accessors immutable={true}/>
 
 <div class="kai-option-menu">
   <div class="kai-option-menu-content">
-    <div bind:this={nodeRef} class="kai-option-menu-body" data-pad-top="26" data-pad-bottom="0">
+    <div
+      bind:this={nodeRef}
+      class="kai-option-menu-body"
+      data-pad-top="26"
+      data-pad-bottom="0"
+    >
       {@html template}
     </div>
   </div>

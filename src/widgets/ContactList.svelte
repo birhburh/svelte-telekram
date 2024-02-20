@@ -1,20 +1,22 @@
+<svelte:options accessors immutable={true} />
+
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator } from '../utils/navigation';
-  import ListView from '../components/ListView.svelte';
-  import SoftwareKey from '../components/SoftwareKey.svelte';
-  import TextInputField from '../components/TextInputField.svelte';
-  import ChatListView from './ChatListView.svelte';
+  import { onMount, onDestroy } from "svelte";
+  import { createKaiNavigator } from "../utils/navigation";
+  import ListView from "../components/ListView.svelte";
+  import SoftwareKey from "../components/SoftwareKey.svelte";
+  import TextInputField from "../components/TextInputField.svelte";
+  import ChatListView from "./ChatListView.svelte";
 
-  const navClass: string = 'optionMenuNav';
+  const navClass: string = "optionMenuNav";
 
-  export let title: string = 'Option Menu';
+  export let title: string = "Option Menu";
   export let focusIndex: number = 0;
   export let sources: Array<any>;
-  export let thumbs: { [key: string]: string; } = {};
-  export let softKeyLeftText: string = '';
-  export let softKeyCenterText: string = 'Close';
-  export let softKeyRightText: string = '';
+  export let thumbs: { [key: string]: string } = {};
+  export let softKeyLeftText: string = "";
+  export let softKeyCenterText: string = "Close";
+  export let softKeyRightText: string = "";
   export let onEnter: Function = (evt, scope) => {};
   export let onBackspace: Function = (evt, scope) => {};
   export let onOpened: Function = () => {};
@@ -40,40 +42,47 @@
       }
     },
     arrowDownListener: (evt) => {
-      if (contactFeeds.length - navInstance.verticalNavIndex === 2 && contactPages.length - 1 !== contactPagesCursor)
+      if (
+        contactFeeds.length - navInstance.verticalNavIndex === 2 &&
+        contactPages.length - 1 !== contactPagesCursor
+      )
         contactFeeds = [...contactFeeds, ...contactPages[++contactPagesCursor]];
       if (navInstance.verticalNavIndex !== contactFeeds.length) {
         evt.preventDefault();
         navInstance.navigateListNav(1);
       }
     },
-    softkeyLeftListener: function(evt) {
-      if (document.activeElement.tagName !== 'INPUT') {
+    softkeyLeftListener: function (evt) {
+      if (document.activeElement.tagName !== "INPUT") {
         setTimeout(() => {
           navInstance.navigateListNav(-navInstance.verticalNavIndex);
         }, 200);
-      } else if (document.activeElement.tagName === 'INPUT') {
-        searchContacts('');
+      } else if (document.activeElement.tagName === "INPUT") {
+        searchContacts("");
       }
     },
-    softkeyRightListener: function(evt) {
-      if (document.activeElement.tagName === 'INPUT') {
+    softkeyRightListener: function (evt) {
+      if (document.activeElement.tagName === "INPUT") {
         searchContacts(document.activeElement.value);
       }
     },
-    enterListener: function(evt) {
-      if (onEnter == null)
-        return;
-      onEnter(evt, {index: this.verticalNavIndex, selected: contactFeeds[this.verticalNavIndex - 1] || null});
+    enterListener: function (evt) {
+      if (onEnter == null) return;
+      onEnter(evt, {
+        index: this.verticalNavIndex,
+        selected: contactFeeds[this.verticalNavIndex - 1] || null,
+      });
     },
-    backspaceListener: function(evt) {
-      if (onBackspace == null)
-        return;
-      if (document.activeElement.tagName === 'INPUT') {
+    backspaceListener: function (evt) {
+      if (onBackspace == null) return;
+      if (document.activeElement.tagName === "INPUT") {
         return;
       }
-      onBackspace(evt, {index: this.verticalNavIndex, selected: sources[this.verticalNavIndex]});
-    }
+      onBackspace(evt, {
+        index: this.verticalNavIndex,
+        selected: sources[this.verticalNavIndex],
+      });
+    },
   };
 
   let navInstance = createKaiNavigator(navOptions);
@@ -82,7 +91,11 @@
     if (thumbs[chat.iconRef]) {
       return `<img alt="icon" style="background-color:var(--themeColor);width:40px;height:40px;border-radius:50%;box-sizing:border-box;border: 2px solid #fff;"" src="${thumbs[chat.iconRef]}"/>`;
     }
-    return `<div style="display:flex;flex-direction:column;justify-content:center;align-items:center;font-weight:bold;color:#fff;background-color:var(--themeColor);width:40px;height:40px;border-radius:50%;box-sizing:border-box;border: 2px solid #fff;">${chat.name.split(' ').map(text => text[0]).splice(0, 2).join('')}</div>`;
+    return `<div style="display:flex;flex-direction:column;justify-content:center;align-items:center;font-weight:bold;color:#fff;background-color:var(--themeColor);width:40px;height:40px;border-radius:50%;box-sizing:border-box;border: 2px solid #fff;">${chat.name
+      .split(" ")
+      .map((text) => text[0])
+      .splice(0, 2)
+      .join("")}</div>`;
   }
 
   function onInput(evt) {}
@@ -90,15 +103,15 @@
   function onFocus(evt) {
     if (softwareKey != null) {
       softwareKey.setText({
-        left: 'Reset',
-        center: '',
-        right: 'Submit',
+        left: "Reset",
+        center: "",
+        right: "Submit",
       });
     }
   }
 
   function onBlur(evt) {
-    if (softwareKey != null && typeof softwareKey.setText == 'function') {
+    if (softwareKey != null && typeof softwareKey.setText == "function") {
       softwareKey.setText({
         left: softKeyLeftText,
         center: softKeyCenterText,
@@ -107,28 +120,32 @@
     }
   }
 
-  function searchContacts(keyword = '') {
+  function searchContacts(keyword = "") {
     contactPages = [];
     contactPagesCursor = 0;
     let page = [];
-    for (let i=0;i<sources.length;i++) {
-      if (keyword == '') {
+    for (let i = 0; i < sources.length; i++) {
+      if (keyword == "") {
         page.push(sources[i]);
       } else {
         let strings = [];
-        if (sources[i].firstName)
-          strings.push(sources[i].firstName);
-        if (sources[i].lastName)
-          strings.push(sources[i].lastName);
-        if (sources[i].phone)
-          strings.push(sources[i].phone);
-        if (sources[i].username)
-          strings.push(sources[i].username);
-        if (strings.join(' ').toLocaleLowerCase().indexOf(keyword.toLocaleLowerCase()) > -1) {
+        if (sources[i].firstName) strings.push(sources[i].firstName);
+        if (sources[i].lastName) strings.push(sources[i].lastName);
+        if (sources[i].phone) strings.push(sources[i].phone);
+        if (sources[i].username) strings.push(sources[i].username);
+        if (
+          strings
+            .join(" ")
+            .toLocaleLowerCase()
+            .indexOf(keyword.toLocaleLowerCase()) > -1
+        ) {
           page.push(sources[i]);
         }
       }
-      if ((i === sources.length - 1 || (i + 1) % contactPerPage === 0) && page.length > 0) {
+      if (
+        (i === sources.length - 1 || (i + 1) % contactPerPage === 0) &&
+        page.length > 0
+      ) {
         contactPages.push(page);
         page = [];
       }
@@ -147,30 +164,43 @@
         isInvert: true,
         leftText: softKeyLeftText,
         centerText: softKeyCenterText,
-        rightText: softKeyRightText
-      }
+        rightText: softKeyRightText,
+      },
     });
-    searchContacts('');
+    searchContacts("");
     onOpened();
-  })
+  });
 
   onDestroy(() => {
     navInstance.detachListener();
     softwareKey.$destroy();
-    onClosed({index: navInstance.verticalNavIndex, selected: sources[navInstance.verticalNavIndex]});
-  })
-
+    onClosed({
+      index: navInstance.verticalNavIndex,
+      selected: sources[navInstance.verticalNavIndex],
+    });
+  });
 </script>
-
-<svelte:options accessors immutable={true}/>
 
 <div class="kai-option-menu">
   <div class="kai-option-menu-content">
     <div class="kai-option-menu-header">{title}</div>
     <div class="kai-option-menu-body" data-pad-top="66" data-pad-bottom="30">
-      <TextInputField className="{navClass}" label="Search Contacts" placeholder="Enter search keyword" value="" type="text" {onInput} {onFocus} {onBlur} />
+      <TextInputField
+        className={navClass}
+        label="Search Contacts"
+        placeholder="Enter search keyword"
+        value=""
+        type="text"
+        {onInput}
+        {onFocus}
+        {onBlur}
+      />
       {#each contactFeeds as contact}
-      <ListView title="{[(contact.firstName || ''), ( contact.lastName || '')].join(' ')}" subtitle="{undefined}" className="{navClass}" />
+        <ListView
+          title={[contact.firstName || "", contact.lastName || ""].join(" ")}
+          subtitle={undefined}
+          className={navClass}
+        />
       {/each}
     </div>
   </div>

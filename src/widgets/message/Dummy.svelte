@@ -1,32 +1,35 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator } from '../../utils/navigation';
+  import { onMount, onDestroy } from "svelte";
+  import { createKaiNavigator } from "../../utils/navigation";
 
-  export let key: any = '';
+  export let key: any = "";
   export let entity: any = {};
   export let message: any = {};
   export let className: string = null;
-  export let onClick: Function = (evt) => {}
+  export let onClick: Function = (evt) => {};
   export let parentNavInstance: typeof KaiNavigator;
-  export let registerCallButtonHandler: Function = (id, callback) => {}
-  export let destroyCallback: Function = () => {}
+  export let registerCallButtonHandler: Function = (id, callback) => {};
+  export let destroyCallback: Function = () => {};
   export let replyTo: any;
   export let short: bool = false;
 
   let navOptions = {
-    softkeyLeftListener: function(evt) {},
-    softkeyRightListener: function(evt) {},
-    enterListener: function(evt) {},
-    backspaceListener: function(evt) {}
+    softkeyLeftListener: function (evt) {},
+    softkeyRightListener: function (evt) {},
+    enterListener: function (evt) {},
+    backspaceListener: function (evt) {},
   };
 
   let navInstance = createKaiNavigator(navOptions);
 
   onMount(() => {});
-
 </script>
 
-<div data-key="{key}" class="kai-list-view {className ? className : ''}" on:click={onClick}>
+<div
+  data-key={key}
+  class="kai-list-view {className ? className : ''}"
+  on:click={onClick}
+>
   <div class="kai-list-view-content">
     <p>Unsupported: {message.action.className}</p>
   </div>
@@ -47,7 +50,7 @@
 
   .kai-list-view > .kai-list-view-content {
     box-sizing: border-box;
-    padding: 8px!important;
+    padding: 8px !important;
     background-color: transparent;
     display: flex;
     flex-direction: column;
@@ -66,8 +69,8 @@
     font-size: 14px;
     text-align: center;
     width: 100%;
-    white-space: pre-wrap!important;
-    word-break: break-word!important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: middle;

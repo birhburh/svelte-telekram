@@ -1,21 +1,23 @@
+<svelte:options accessors immutable={true} />
+
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator } from '../utils/navigation';
-  import SoftwareKey from './SoftwareKey.svelte';
-  import ListView from './ListView.svelte';
+  import { onMount, onDestroy } from "svelte";
+  import { createKaiNavigator } from "../utils/navigation";
+  import SoftwareKey from "./SoftwareKey.svelte";
+  import ListView from "./ListView.svelte";
 
-  const navClass: string = 'optionMenuNav';
+  const navClass: string = "optionMenuNav";
 
-  export let title: string = 'Option Menu';
+  export let title: string = "Option Menu";
   export let focusIndex: number = 0;
   export let options: {
-    title: string,
-    subtitle?: string,
-    icon?: any
+    title: string;
+    subtitle?: string;
+    icon?: any;
   }[];
-  export let softKeyLeftText: string = '';
-  export let softKeyCenterText: string = 'Close';
-  export let softKeyRightText: string = '';
+  export let softKeyLeftText: string = "";
+  export let softKeyCenterText: string = "Close";
+  export let softKeyRightText: string = "";
   export let onEnter: Function = (evt, scope) => {};
   export let onBackspace: Function = (evt, scope) => {};
   export let onSoftkeyLeft: Function = (evt, scope) => {};
@@ -31,26 +33,34 @@
 
   let navOptions = {
     verticalNavClass: navClass,
-    softkeyLeftListener: function(evt) {
-      if (onSoftkeyLeft == null)
-        return;
-      onSoftkeyLeft(evt, {index: this.verticalNavIndex, selected: options[this.verticalNavIndex]});
+    softkeyLeftListener: function (evt) {
+      if (onSoftkeyLeft == null) return;
+      onSoftkeyLeft(evt, {
+        index: this.verticalNavIndex,
+        selected: options[this.verticalNavIndex],
+      });
     },
-    softkeyRightListener: function(evt) {
-      if (onSoftkeyRight == null)
-        return;
-      onSoftkeyRight(evt, {index: this.verticalNavIndex, selected: options[this.verticalNavIndex]});
+    softkeyRightListener: function (evt) {
+      if (onSoftkeyRight == null) return;
+      onSoftkeyRight(evt, {
+        index: this.verticalNavIndex,
+        selected: options[this.verticalNavIndex],
+      });
     },
-    enterListener: function(evt) {
-      if (onEnter == null)
-        return;
-      onEnter(evt, {index: this.verticalNavIndex, selected: options[this.verticalNavIndex]});
+    enterListener: function (evt) {
+      if (onEnter == null) return;
+      onEnter(evt, {
+        index: this.verticalNavIndex,
+        selected: options[this.verticalNavIndex],
+      });
     },
-    backspaceListener: function(evt) {
-      if (onBackspace == null)
-        return;
-      onBackspace(evt, {index: this.verticalNavIndex, selected: options[this.verticalNavIndex]});
-    }
+    backspaceListener: function (evt) {
+      if (onBackspace == null) return;
+      onBackspace(evt, {
+        index: this.verticalNavIndex,
+        selected: options[this.verticalNavIndex],
+      });
+    },
   };
 
   let navInstance = createKaiNavigator(navOptions);
@@ -63,31 +73,37 @@
         isInvert: true,
         leftText: softKeyLeftText,
         centerText: softKeyCenterText,
-        rightText: softKeyRightText
-      }
+        rightText: softKeyRightText,
+      },
     });
     onOpened();
-  })
+  });
 
   onDestroy(() => {
     navInstance.detachListener();
     softwareKey.$destroy();
-    onClosed({index: navInstance.verticalNavIndex, selected: options[navInstance.verticalNavIndex]});
-  })
-
+    onClosed({
+      index: navInstance.verticalNavIndex,
+      selected: options[navInstance.verticalNavIndex],
+    });
+  });
 </script>
-
-<svelte:options accessors immutable={true}/>
 
 <div class="kai-option-menu">
   <div class="kai-option-menu-content">
     <div class="kai-option-menu-header">{title}</div>
     <div class="kai-option-menu-body" data-pad-top="66" data-pad-bottom="30">
       {#each options as option}
-      <ListView className="{navClass}" title="{option.title}" subtitle="{option.subtitle}">
-        <span slot="leftWidget" style="padding-right: 4px;">{@html (option.icon ? option.icon : '')}</span>
-        <span slot="rightWidget"></span>
-      </ListView>
+        <ListView
+          className={navClass}
+          title={option.title}
+          subtitle={option.subtitle}
+        >
+          <span slot="leftWidget" style="padding-right: 4px;"
+            >{@html option.icon ? option.icon : ""}</span
+          >
+          <span slot="rightWidget"></span>
+        </ListView>
       {/each}
     </div>
   </div>

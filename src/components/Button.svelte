@@ -1,13 +1,13 @@
 <script lang="ts">
-  export let className: string = '';
-  export let text: string = '';
-  export let onClick: Function = (evt) => {}
+  export let className: string = "";
+  export let text: string = "";
+  export let onClick: Function = (evt) => {};
 </script>
 
 <div class="kai-button {className}" on:click={onClick}>
-  <slot name="leftWidget"></slot>
+  <slot name="leftWidget" />
   <span>{text}</span>
-  <slot name="rightWidget"></slot>
+  <slot name="rightWidget" />
 </div>
 
 <style>

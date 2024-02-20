@@ -1,12 +1,14 @@
+<svelte:options accessors immutable={true} />
+
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator } from '../utils/navigation';
-  import SoftwareKey from '../components/SoftwareKey.svelte';
-  import Message from './message/Message.svelte';
+  import { onMount, onDestroy } from "svelte";
+  import { createKaiNavigator } from "../utils/navigation";
+  import SoftwareKey from "../components/SoftwareKey.svelte";
+  import Message from "./message/Message.svelte";
 
-  const navClass: string = 'optionMenuNav';
+  const navClass: string = "optionMenuNav";
 
-  export let title: string = 'Option Menu';
+  export let title: string = "Option Menu";
   export let chat: any = {};
   export let messages: Array<any>;
   export let onBackspace: Function = (evt) => {};
@@ -19,40 +21,40 @@
   let softwareKey: SoftwareKey;
 
   let nodeRef;
-  let registerCallButtonHandler: Function = (id, callback) => {}
+  let registerCallButtonHandler: Function = (id, callback) => {};
 
   export function setTitleText(text) {
     title = text;
   }
 
   let navOptions = {
-    arrowUpListener: function(evt) {
+    arrowUpListener: function (evt) {
       nodeRef.scrollTop -= 20;
       evt.preventDefault();
       evt.stopPropagation();
     },
-    arrowDownListener: function(evt) {
+    arrowDownListener: function (evt) {
       nodeRef.scrollTop += 20;
       evt.preventDefault();
       evt.stopPropagation();
     },
-    arrowLeftListener: function(evt) {
+    arrowLeftListener: function (evt) {
       nodeRef.scrollLeft -= 20;
       evt.preventDefault();
       evt.stopPropagation();
     },
-    arrowRightListener: function(evt) {
+    arrowRightListener: function (evt) {
       nodeRef.scrollLeft += 20;
       evt.preventDefault();
       evt.stopPropagation();
     },
-    softkeyLeftListener: function(evt) {},
-    softkeyRightListener: function(evt) {
+    softkeyLeftListener: function (evt) {},
+    softkeyRightListener: function (evt) {
       onBackspace(evt);
     },
-    backspaceListener: function(evt) {
+    backspaceListener: function (evt) {
       onBackspace(evt);
-    }
+    },
   };
 
   let navInstance = createKaiNavigator(navOptions);
@@ -63,30 +65,43 @@
       target: document.body,
       props: {
         isInvert: true,
-        leftText: '',
-        centerText: '',
-        rightText: 'Close'
-      }
+        leftText: "",
+        centerText: "",
+        rightText: "Close",
+      },
     });
     onOpened();
-  })
+  });
 
   onDestroy(() => {
     navInstance.detachListener();
     softwareKey.$destroy();
     onClosed();
-  })
-
+  });
 </script>
-
-<svelte:options accessors immutable={true}/>
 
 <div class="kai-option-menu">
   <div class="kai-option-menu-content">
     <div class="kai-option-menu-header">{title}</div>
-    <div bind:this={nodeRef} class="kai-option-menu-body" data-pad-top="66" data-pad-bottom="30">
+    <div
+      bind:this={nodeRef}
+      class="kai-option-menu-body"
+      data-pad-top="66"
+      data-pad-bottom="30"
+    >
       {#each messages as message}
-        <svelte:component className="replies" this={resolveMessageWidget(message)} {message} {registerCallButtonHandler} parentNavInstance={navInstance} replyTo={getReplyHeader(message)} chat={chat} short={false} scrollable={false} replyThreadId={replyThreadId}/>
+        <svelte:component
+          this={resolveMessageWidget(message)}
+          className="replies"
+          {message}
+          {registerCallButtonHandler}
+          parentNavInstance={navInstance}
+          replyTo={getReplyHeader(message)}
+          {chat}
+          short={false}
+          scrollable={false}
+          {replyThreadId}
+        />
       {/each}
     </div>
   </div>

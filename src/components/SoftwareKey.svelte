@@ -1,7 +1,7 @@
 <script lang="ts">
-  export let leftText: string = 'Left';
-  export let centerText: string = 'Center';
-  export let rightText: string = 'Right';
+  export let leftText: string = "Left";
+  export let centerText: string = "Center";
+  export let rightText: string = "Right";
   export let isInvert: bool = false;
 
   export function setLeftText(text) {
@@ -17,12 +17,9 @@
   }
 
   export function setText(opts = {}) {
-    if (opts['left'] != null)
-      setLeftText(opts['left']);
-    if (opts['center'] != null)
-      setCenterText(opts['center']);
-    if (opts['right'] != null)
-      setRightText(opts['right']);
+    if (opts["left"] != null) setLeftText(opts["left"]);
+    if (opts["center"] != null) setCenterText(opts["center"]);
+    if (opts["right"] != null) setRightText(opts["right"]);
   }
 
   export function normalStyle() {
@@ -32,7 +29,6 @@
   export function invertStyle() {
     isInvert = true;
   }
-  
 </script>
 
 <div class="kai-software-key {isInvert ? 'invert' : ''}">
@@ -50,7 +46,7 @@
     bottom: 0px;
     position: fixed;
     color: #00000;
-    background-color: #CCCCCC;
+    background-color: #cccccc;
     height: 30px;
     width: 100%;
   }

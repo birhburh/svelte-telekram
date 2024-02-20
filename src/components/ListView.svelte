@@ -1,14 +1,18 @@
 <script lang="ts">
-  export let key:any = '';
-  export let title: string = '';
+  export let key: any = "";
+  export let title: string = "";
   export let subtitle: string = null;
   export let className: string = null;
-  export let onClick: Function = (evt) => {}
+  export let onClick: Function = (evt) => {};
 </script>
 
-<div data-key="{key}" class="kai-list-view {className ? className : ''}" on:click={onClick}>
+<div
+  data-key={key}
+  class="kai-list-view {className ? className : ''}"
+  on:click={onClick}
+>
   {#if $$slots.leftWidget}
-  <slot name="leftWidget"></slot>
+    <slot name="leftWidget" />
   {/if}
   <slot>
     <div class="kai-list-view-content">
@@ -51,8 +55,8 @@
     text-align: start;
     height: 20px;
     width: 100%;
-    white-space: pre-wrap!important;
-    word-break: break-word!important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: middle;
@@ -61,13 +65,13 @@
   .kai-list-view > .kai-list-view-content > small {
     padding: 0px;
     font-size: 12px;
-    color: #6A6A6A;
+    color: #6a6a6a;
     text-align: start;
     vertical-align: middle;
   }
 
   .kai-list-view > span {
-    color: #6B6B6B;
+    color: #6b6b6b;
   }
 
   .kai-list-view.focus,

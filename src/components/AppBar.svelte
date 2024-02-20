@@ -1,5 +1,5 @@
 <script lang="ts">
-  export let title: string = 'Svelte';
+  export let title: string = "Svelte";
 
   let visible: bool = true;
 
@@ -15,7 +15,6 @@
   export function getVisibility() {
     return visible;
   }
-
 </script>
 
 <div class="kai-app-bar" style="display:{visible ? '' : 'none'};">{title}</div>

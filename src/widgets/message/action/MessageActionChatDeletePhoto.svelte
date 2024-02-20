@@ -1,21 +1,17 @@
-<script lang="ts">
+<svelte:options accessors immutable={true} />
 
-  import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator, KaiNavigator } from '../../../utils/navigation';
+<script lang="ts">
+  import { onMount, onDestroy } from "svelte";
+  import { createKaiNavigator, KaiNavigator } from "../../../utils/navigation";
 
   export let chat: any = {};
   export let message: any = {};
   export let parentNavInstance: typeof KaiNavigator;
-  export let callButtonCallback: Function = (id, callback) => {}
-  export let fetchMessageCallback: Function = (id: number) => {}
+  export let callButtonCallback: Function = (id, callback) => {};
+  export let fetchMessageCallback: Function = (id: number) => {};
 
-  onMount(() => {
-    
-  });
-
+  onMount(() => {});
 </script>
-
-<svelte:options accessors immutable={true}/>
 
 <div class="MessageActionChatDeletePhoto">
   <p>Photo deleted</p>

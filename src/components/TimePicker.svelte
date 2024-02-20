@@ -1,15 +1,17 @@
-<script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { createKaiNavigator } from '../utils/navigation';
-  import SoftwareKey from './SoftwareKey.svelte';
+<svelte:options accessors />
 
-  export let title: string = 'Date Picker';
+<script lang="ts">
+  import { onMount, onDestroy } from "svelte";
+  import { createKaiNavigator } from "../utils/navigation";
+  import SoftwareKey from "./SoftwareKey.svelte";
+
+  export let title: string = "Date Picker";
   export let date: Date = new Date();
   export let is12HourSystem: boolean = false;
-  export let localization: [string, string] = ['AM', 'PM'];
-  export let softKeyLeftText: string = 'cancel';
-  export let softKeyCenterText: string = 'Save';
-  export let softKeyRightText: string = '';
+  export let localization: [string, string] = ["AM", "PM"];
+  export let softKeyLeftText: string = "cancel";
+  export let softKeyCenterText: string = "Save";
+  export let softKeyRightText: string = "";
   export let onEnter: Function = (evt, date: Date) => {};
   export let onBackspace: Function = (evt, date: Date) => {};
   export let onSoftkeyLeft: Function = (evt, date: Date) => {};
@@ -17,7 +19,7 @@
   export let onOpened: Function = () => {};
   export let onClosed: Function = (date: Date) => {};
 
-  const navClass = 'time-nav';
+  const navClass = "time-nav";
   let navClasses = [];
   let navClassIndex = -1;
   let softwareKey: SoftwareKey;
@@ -32,7 +34,7 @@
   function nav(next) {
     const currentIndex = navClassIndex;
     var move = navClassIndex + next;
-    var cursor:any = navClasses[move];
+    var cursor: any = navClasses[move];
     if (cursor != undefined) {
       navClassIndex = move;
     } else {
@@ -44,9 +46,9 @@
       cursor = navClasses[move];
       navClassIndex = move;
     }
-    cursor.classList.add('focus');
+    cursor.classList.add("focus");
     if (navClasses[currentIndex]) {
-      navClasses[currentIndex].classList.remove('focus');
+      navClasses[currentIndex].classList.remove("focus");
     }
   }
 
@@ -54,14 +56,18 @@
     const cursor = navClasses[0];
     date.setHours(date.getHours() + move);
     if (is12HourSystem === false) {
-      cursor.previousElementSibling.textContent = date.getHours() - 1  === -1 ? '' : formatInteger(date.getHours() - 1);
+      cursor.previousElementSibling.textContent =
+        date.getHours() - 1 === -1 ? "" : formatInteger(date.getHours() - 1);
       cursor.textContent = formatInteger(date.getHours());
-      cursor.nextElementSibling.textContent= date.getHours() + 1 > 23 ? '' : formatInteger(date.getHours() + 1);
+      cursor.nextElementSibling.textContent =
+        date.getHours() + 1 > 23 ? "" : formatInteger(date.getHours() + 1);
     } else {
-      var hours = (date.getHours() % 12) || 12;
-      cursor.previousElementSibling.textContent = hours - 1 ? formatInteger(hours - 1) : '';
+      var hours = date.getHours() % 12 || 12;
+      cursor.previousElementSibling.textContent =
+        hours - 1 ? formatInteger(hours - 1) : "";
       cursor.textContent = formatInteger(hours);
-      cursor.nextElementSibling.textContent = hours + 1 > 12 ? '' : formatInteger(hours + 1);
+      cursor.nextElementSibling.textContent =
+        hours + 1 > 12 ? "" : formatInteger(hours + 1);
     }
   }
 
@@ -77,9 +83,11 @@
       return;
     }
     const cursor = navClasses[1];
-    cursor.previousElementSibling.textContent = minutes - 1 === -1 ? '' : formatInteger(minutes - 1);
+    cursor.previousElementSibling.textContent =
+      minutes - 1 === -1 ? "" : formatInteger(minutes - 1);
     cursor.textContent = formatInteger(minutes);
-    cursor.nextElementSibling.textContent = minutes + 1 > 59 ? '' : formatInteger(minutes + 1);
+    cursor.nextElementSibling.textContent =
+      minutes + 1 > 59 ? "" : formatInteger(minutes + 1);
   }
 
   function setDuration(move) {
@@ -96,14 +104,13 @@
     }
     duration = localization[idx];
     const cursor = navClasses[2];
-    cursor.previousElementSibling.textContent = localization[idx - 1] || '';
+    cursor.previousElementSibling.textContent = localization[idx - 1] || "";
     cursor.textContent = localization[idx];
-    cursor.nextElementSibling.textContent = localization[idx + 1] || '';
+    cursor.nextElementSibling.textContent = localization[idx + 1] || "";
   }
 
   function formatInteger(n: int): string {
-    if (n < 10)
-      return `0${n}`;
+    if (n < 10) return `0${n}`;
     return n;
   }
 
@@ -112,13 +119,12 @@
     if (is12HourSystem === false) {
       h = date.getHours();
     } else {
-      var hours = (date.getHours() % 12) || 12;
+      var hours = date.getHours() % 12 || 12;
       if (duration === localization[0] && hours === 12) {
         hours = 0;
       } else if (duration === localization[1]) {
         hours += 12;
-        if (hours === 24)
-          hours = 12;
+        if (hours === 24) hours = 12;
       }
       h = hours;
     }
@@ -128,7 +134,7 @@
   }
 
   let navOptions = {
-    arrowUpListener: function(evt) {
+    arrowUpListener: function (evt) {
       if (navClassIndex == 0) {
         setHour(-1);
       } else if (navClassIndex == 1) {
@@ -139,7 +145,7 @@
       evt.preventDefault();
       evt.stopPropagation();
     },
-    arrowDownListener: function(evt) {
+    arrowDownListener: function (evt) {
       if (navClassIndex == 0) {
         setHour(1);
       } else if (navClassIndex == 1) {
@@ -150,36 +156,32 @@
       evt.preventDefault();
       evt.stopPropagation();
     },
-    arrowLeftListener: function(evt) {
+    arrowLeftListener: function (evt) {
       nav(-1);
       evt.preventDefault();
       evt.stopPropagation();
     },
-    arrowRightListener: function(evt) {
+    arrowRightListener: function (evt) {
       nav(1);
       evt.preventDefault();
       evt.stopPropagation();
     },
-    softkeyLeftListener: function(evt) {
-      if (onSoftkeyLeft == null)
-        return;
+    softkeyLeftListener: function (evt) {
+      if (onSoftkeyLeft == null) return;
       onSoftkeyLeft(evt, formatDate());
     },
-    softkeyRightListener: function(evt) {
-      if (onSoftkeyRight == null)
-        return;
+    softkeyRightListener: function (evt) {
+      if (onSoftkeyRight == null) return;
       onSoftkeyRight(evt, formatDate());
     },
-    enterListener: function(evt) {
-      if (onEnter == null)
-        return;
+    enterListener: function (evt) {
+      if (onEnter == null) return;
       onEnter(evt, formatDate());
     },
-    backspaceListener: function(evt) {
-      if (onBackspace == null)
-        return;
+    backspaceListener: function (evt) {
+      if (onBackspace == null) return;
       onBackspace(evt, formatDate());
-    }
+    },
   };
 
   let navInstance = createKaiNavigator(navOptions);
@@ -192,8 +194,8 @@
         isInvert: false,
         leftText: softKeyLeftText,
         centerText: softKeyCenterText,
-        rightText: softKeyRightText
-      }
+        rightText: softKeyRightText,
+      },
     });
     const doms = document.getElementsByClassName(navClass);
     const keys = Object.keys(doms);
@@ -206,24 +208,20 @@
     minutes = date.getMinutes();
     nav(1);
     if (is12HourSystem) {
-      if (date.getHours() > 11)
-        duration = localization[1];
+      if (date.getHours() > 11) duration = localization[1];
       setDuration(0);
     }
     setMinute(0);
     setHour(0);
     onOpened();
-  })
+  });
 
   onDestroy(() => {
     navInstance.detachListener();
     softwareKey.$destroy();
     onClosed(formatDate());
-  })
-
+  });
 </script>
-
-<svelte:options accessors/>
 
 <div class="kai-dialog">
   <div class="kai-dialog-content">
@@ -241,13 +239,13 @@
           <div class="{navClass} time-block navable">MM</div>
           <div class="time-block">+MM</div>
         </div>
-        {#if is12HourSystem }
-        <div class="time-line"></div>
-        <div class="time-column">
-          <div class="time-block">-DD</div>
-          <div class="{navClass} time-block navable">DD</div>
-          <div class="time-block">+DD</div>
-        </div>
+        {#if is12HourSystem}
+          <div class="time-line"></div>
+          <div class="time-column">
+            <div class="time-block">-DD</div>
+            <div class="{navClass} time-block navable">DD</div>
+            <div class="time-block">+DD</div>
+          </div>
         {/if}
       </div>
     </div>
@@ -291,7 +289,11 @@
     justify-content: stretch;
     align-items: stretch;
   }
-  .kai-dialog > .kai-dialog-content > .kai-dialog-body > .time-picker-row > .time-column {
+  .kai-dialog
+    > .kai-dialog-content
+    > .kai-dialog-body
+    > .time-picker-row
+    > .time-column {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -299,12 +301,21 @@
     align-items: stretch;
     text-align: center;
   }
-  .kai-dialog > .kai-dialog-content > .kai-dialog-body > .time-picker-row > .time-line {
+  .kai-dialog
+    > .kai-dialog-content
+    > .kai-dialog-body
+    > .time-picker-row
+    > .time-line {
     width: 1px;
     background-color: #cacaca;
   }
-  .kai-dialog > .kai-dialog-content > .kai-dialog-body > .time-picker-row > .time-column > .time-block {
-    display:block;
+  .kai-dialog
+    > .kai-dialog-content
+    > .kai-dialog-body
+    > .time-picker-row
+    > .time-column
+    > .time-block {
+    display: block;
     vertical-align: middle;
     text-align: center;
     padding: 10px 0;
@@ -312,11 +323,21 @@
     color: #323232;
     font-size: 15px;
   }
-  .kai-dialog > .kai-dialog-content > .kai-dialog-body > .time-picker-row > .time-column > .time-block.navable {
+  .kai-dialog
+    > .kai-dialog-content
+    > .kai-dialog-body
+    > .time-picker-row
+    > .time-column
+    > .time-block.navable {
     color: var(--themeColor);
     font-size: 17px;
   }
-  .kai-dialog > .kai-dialog-content > .kai-dialog-body > .time-picker-row > .time-column > .time-block.navable.focus {
+  .kai-dialog
+    > .kai-dialog-content
+    > .kai-dialog-body
+    > .time-picker-row
+    > .time-column
+    > .time-block.navable.focus {
     color: #ffffff;
     background-color: var(--themeColor);
     font-weight: bold;

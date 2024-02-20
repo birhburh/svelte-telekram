@@ -1,20 +1,30 @@
 <script lang="ts">
-  export let className: string = '';
+  export let className: string = "";
   export let label: string = undefined;
-  export let value: string = '';
-  export let type: string = 'text';
-  export let placeholder: string = '';
-  export let rows:number = 2;
-  export let onInput: Function = (evt) => {}
-  export let onFocus: Function = (evt) => {}
-  export let onBlur: Function = (evt) => {}
+  export let value: string = "";
+  export let type: string = "text";
+  export let placeholder: string = "";
+  export let rows: number = 2;
+  export let onInput: Function = (evt) => {};
+  export let onFocus: Function = (evt) => {};
+  export let onBlur: Function = (evt) => {};
 </script>
 
 <div class="kai-text-area {className}">
   {#if label}
-  <label for={label.split(' ').join('-')}>{label}</label>
+    <label for={label.split(" ").join("-")}>{label}</label>
   {/if}
-  <textarea id={label && label.split(' ').join('-')} name={label} type={type} value={value} placeholder={placeholder} rows={rows} on:input={onInput} on:focus={onFocus} on:blur={onBlur}></textarea>
+  <textarea
+    id={label && label.split(" ").join("-")}
+    name={label}
+    {type}
+    {value}
+    {placeholder}
+    {rows}
+    on:input={onInput}
+    on:focus={onFocus}
+    on:blur={onBlur}
+  ></textarea>
 </div>
 
 <style>

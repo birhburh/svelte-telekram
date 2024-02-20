@@ -1,15 +1,21 @@
-<script lang="ts">
-  import { onMount, onDestroy, beforeUpdate } from 'svelte';
-  import { createKaiNavigator, KaiNavigator } from '../../../utils/navigation';
-  import { OptionMenu, MultiSelector, SingleSelector } from '../../../components';
+<svelte:options accessors immutable={true} />
 
-  import { client, Api } from '../../../utils/bootstrap';
+<script lang="ts">
+  import { onMount, onDestroy, beforeUpdate } from "svelte";
+  import { createKaiNavigator, KaiNavigator } from "../../../utils/navigation";
+  import {
+    OptionMenu,
+    MultiSelector,
+    SingleSelector,
+  } from "../../../components";
+
+  import { client, Api } from "../../../utils/bootstrap";
 
   export let chat: any = {};
   export let message: any = {};
   export let parentNavInstance: typeof KaiNavigator;
-  export let callButtonCallback: Function = (id, callback) => {}
-  export let fetchMessageCallback: Function = (id: number) => {}
+  export let callButtonCallback: Function = (id, callback) => {};
+  export let fetchMessageCallback: Function = (id: number) => {};
 
   let available: bool = true;
   let answeredOrVoted: bool = false;
@@ -28,10 +34,10 @@
       singleSelector = new SingleSelector({
         target: document.body,
         props: {
-          title: message.media.poll.quiz ? 'Submit answer' : 'Cast vote',
+          title: message.media.poll.quiz ? "Submit answer" : "Cast vote",
           focusIndex: 0,
           options: answers,
-          softKeyCenterText: 'select',
+          softKeyCenterText: "select",
           onSoftkeyRight: (evt, scope) => {},
           onSoftkeyLeft: (evt, scope) => {},
           onEnter: async (evt, scope) => {
@@ -44,11 +50,13 @@
               }
             }
             if (vote) {
-              const result = await client.invoke(new Api.messages.SendVote({
-                peer: chat,
-                msgId: message.id,
-                options: [vote.option]
-              }));
+              const result = await client.invoke(
+                new Api.messages.SendVote({
+                  peer: chat,
+                  msgId: message.id,
+                  options: [vote.option],
+                }),
+              );
               fetchMessageCallback(message.id);
             }
           },
@@ -63,11 +71,11 @@
           onClosed: (scope) => {
             parentNavInstance.attachListener();
             singleSelector = null;
-          }
-        }
+          },
+        },
       });
     } catch (err) {
-      console.log('singleChoice:', err);
+      console.log("singleChoice:", err);
     }
   }
 
@@ -80,13 +88,13 @@
       multiSelector = new MultiSelector({
         target: document.body,
         props: {
-          title: 'Cast votes',
+          title: "Cast votes",
           focusIndex: 0,
           options: answers,
-          softKeyLeftText: 'Cancel',
-          softKeyRightText: 'Done',
-          softKeyCenterTextSelect: 'select',
-          softKeyCenterTextDeselect: 'deselect',
+          softKeyLeftText: "Cancel",
+          softKeyRightText: "Done",
+          softKeyCenterTextSelect: "select",
+          softKeyCenterTextDeselect: "deselect",
           onSoftkeyLeft: (evt, scope) => {
             evt.preventDefault();
             evt.stopPropagation();
@@ -96,19 +104,21 @@
             evt.preventDefault();
             evt.stopPropagation();
             multiSelector.$destroy();
-            const votes = []
+            const votes = [];
             scope.options.forEach((o, i) => {
               if (o.checked) {
-                votes.push(message.media.poll.answers[i])
+                votes.push(message.media.poll.answers[i]);
               }
             });
             if (votes.length > 0) {
-              const options = votes.map(v => v.option);
-              const result = await client.invoke(new Api.messages.SendVote({
-                peer: chat,
-                msgId: message.id,
-                options: options
-              }));
+              const options = votes.map((v) => v.option);
+              const result = await client.invoke(
+                new Api.messages.SendVote({
+                  peer: chat,
+                  msgId: message.id,
+                  options: options,
+                }),
+              );
               fetchMessageCallback(message.id);
             }
           },
@@ -123,24 +133,26 @@
           onClosed: (scope) => {
             parentNavInstance.attachListener();
             multiSelector = null;
-          }
-        }
+          },
+        },
       });
     } catch (err) {
-      console.log('multipleChoice:', err);
+      console.log("multipleChoice:", err);
     }
   }
 
   async function retractVote() {
     try {
-      const result = await client.invoke(new Api.messages.SendVote({
-        peer: chat,
-        msgId: message.id,
-        options: []
-      }));
+      const result = await client.invoke(
+        new Api.messages.SendVote({
+          peer: chat,
+          msgId: message.id,
+          options: [],
+        }),
+      );
       fetchMessageCallback(message.id);
     } catch (err) {
-      console.log('retractVote:', err);
+      console.log("retractVote:", err);
     }
   }
 
@@ -148,23 +160,23 @@
     const results = [];
     if (message.media.results.solution) {
       results.push({
-        title: 'Explanation',
-        subtitle: message.media.results.solution
+        title: "Explanation",
+        subtitle: message.media.results.solution,
       });
     }
     message.media.results.results.forEach((result, i) => {
       results.push({
         title: message.media.poll.answers[i].text,
-        subtitle: `Voters: ${result.voters}, Chosen: ${result.chosen ? '√' : 'X'}${message.media.poll.quiz ? (result.correct ? ', Correct: √' : ', Correct: X') : ''}${message.media.poll.quiz ? (result.chosen && result.correct ? ', Result: √' : ', Result: X') : ''}`
+        subtitle: `Voters: ${result.voters}, Chosen: ${result.chosen ? "√" : "X"}${message.media.poll.quiz ? (result.correct ? ", Correct: √" : ", Correct: X") : ""}${message.media.poll.quiz ? (result.chosen && result.correct ? ", Result: √" : ", Result: X") : ""}`,
       });
     });
     pollResults = new OptionMenu({
       target: document.body,
       props: {
-        title: 'Result',
+        title: "Result",
         focusIndex: 0,
         options: results,
-        softKeyCenterText: 'select',
+        softKeyCenterText: "select",
         onSoftkeyRight: (evt, scope) => {},
         onSoftkeyLeft: (evt, scope) => {},
         onEnter: (evt, scope) => {
@@ -181,8 +193,8 @@
         onClosed: (scope) => {
           parentNavInstance.attachListener();
           pollResults = null;
-        }
-      }
+        },
+      },
     });
   }
 
@@ -190,38 +202,38 @@
     const options = [];
     if (available) {
       if (message.media.poll.quiz || !message.media.poll.multipleChoice) {
-        if (message.media.poll.quiz)
-          options.push({ title: 'Submit answer' });
-        else
-          options.push({ title: 'Cast vote' });
+        if (message.media.poll.quiz) options.push({ title: "Submit answer" });
+        else options.push({ title: "Cast vote" });
       } else {
-        options.push({ title: 'Cast votes' });
+        options.push({ title: "Cast votes" });
       }
     } else {
-      if (!message.media.poll.quiz)
-        options.push({ title: 'Retract vote' });
-      options.push({ title: 'Show Result' });
+      if (!message.media.poll.quiz) options.push({ title: "Retract vote" });
+      options.push({ title: "Show Result" });
     }
     setTimeout(() => {
       menu = new OptionMenu({
         target: document.body,
         props: {
-          title: 'Action Menu',
+          title: "Action Menu",
           focusIndex: 0,
           options: options,
-          softKeyCenterText: 'select',
+          softKeyCenterText: "select",
           onSoftkeyRight: (evt, scope) => {},
           onSoftkeyLeft: (evt, scope) => {},
           onEnter: (evt, scope) => {
             menu.$destroy();
             setTimeout(() => {
-              if (['Submit answer', 'Cast vote'].indexOf(scope.selected.title) > -1) {
+              if (
+                ["Submit answer", "Cast vote"].indexOf(scope.selected.title) >
+                -1
+              ) {
                 singleChoice();
-              } else if (scope.selected.title === 'Cast votes') {
+              } else if (scope.selected.title === "Cast votes") {
                 multipleChoice();
-              } else if (scope.selected.title === 'Retract vote') {
+              } else if (scope.selected.title === "Retract vote") {
                 retractVote();
-              } else if (scope.selected.title === 'Show Result') {
+              } else if (scope.selected.title === "Show Result") {
                 showResult();
               }
             }, 100);
@@ -237,8 +249,8 @@
           onClosed: (scope) => {
             parentNavInstance.attachListener();
             menu = null;
-          }
-        }
+          },
+        },
       });
     }, 100);
   }
@@ -246,8 +258,7 @@
   function update() {
     available = true;
     answeredOrVoted = false;
-    if (message.media.poll.closed)
-      available = false;
+    if (message.media.poll.closed) available = false;
     for (let r in message.media.results.results) {
       if (message.media.results.results[r].chosen) {
         available = false;
@@ -259,39 +270,44 @@
 
   beforeUpdate(() => {
     update();
-  })
+  });
 
   onMount(() => {
     callButtonCallback(message.id.toString(), actionMenu);
     update();
-  })
+  });
 
   onDestroy(() => {});
-
 </script>
 
-<svelte:options accessors immutable={true}/>
-
 <div class="media-container">
-  <b>{message.media.poll.quiz ? 'Quiz' : 'Poll'}:</b>
+  <b>{message.media.poll.quiz ? "Quiz" : "Poll"}:</b>
   <p>{message.media.poll.question}</p>
   {#if !available}
-  <small><i>Status: {answeredOrVoted ? (message.media.poll.quiz ? 'Answered' : 'Voted') : 'Ended'}</i></small>
+    <small
+      ><i
+        >Status: {answeredOrVoted
+          ? message.media.poll.quiz
+            ? "Answered"
+            : "Voted"
+          : "Ended"}</i
+      ></small
+    >
   {:else}
-  <small><i>Status: Available</i></small>
+    <small><i>Status: Available</i></small>
   {/if}
 </div>
 
 <style>
-.media-container {
-  text-align: start;
-  display: flex;
-  flex-direction: column;
-  justify-content: start;
-  align-items: start;
-}
-.media-container > p {
-  padding: 0px;
-  margin: 2px 0px;
-}
+  .media-container {
+    text-align: start;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+  }
+  .media-container > p {
+    padding: 0px;
+    margin: 2px 0px;
+  }
 </style>
