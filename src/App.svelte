@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Router, Route, Link } from "svelte-navigator";
+  import { Router, Route } from "svelte-navigator";
   import { AppBar, SoftwareKey } from "./components";
   import { Home, Room } from "./routes";
   import { onMount } from "svelte";
