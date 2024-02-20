@@ -1,6 +1,6 @@
 import AppBar from "./AppBar.svelte";
 import SoftwareKey from "./SoftwareKey.svelte";
-import Dialog from "./Dialog.svelte";;
+import Dialog from "./Dialog.svelte";
 import OptionMenu from "./OptionMenu.svelte";
 import SingleSelector from "./SingleSelector.svelte";
 import MultiSelector from "./MultiSelector.svelte";
@@ -18,7 +18,7 @@ import TextInputDialog from "./TextInputDialog.svelte";
 import TextAreaDialog from "./TextAreaDialog.svelte";
 import DatePicker from "./DatePicker.svelte";
 import TimePicker from "./TimePicker.svelte";
-import { SvelteToast, toast } from '@zerodevx/svelte-toast'
+import { SvelteToast, toast } from "@zerodevx/svelte-toast";
 
 export {
   AppBar,
@@ -42,5 +42,5 @@ export {
   DatePicker,
   TimePicker,
   SvelteToast as Toast,
-  toast as Toaster
-}
+  toast as Toaster,
+};

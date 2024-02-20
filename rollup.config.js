@@ -1,16 +1,16 @@
-import svelte from 'rollup-plugin-svelte';
-import commonjs from '@rollup/plugin-commonjs';
-import nodePolyfills from 'rollup-plugin-polyfill-node';
-import resolve from '@rollup/plugin-node-resolve';
-import livereload from 'rollup-plugin-livereload';
-import { terser } from 'rollup-plugin-terser';
-import sveltePreprocess from 'svelte-preprocess';
-import typescript from '@rollup/plugin-typescript';
-import css from 'rollup-plugin-css-only';
-import babel from 'rollup-plugin-babel';
-import replace from '@rollup/plugin-replace';
-import json from '@rollup/plugin-json';
-import { config } from 'dotenv';
+import svelte from "rollup-plugin-svelte";
+import commonjs from "@rollup/plugin-commonjs";
+import nodePolyfills from "rollup-plugin-polyfill-node";
+import resolve from "@rollup/plugin-node-resolve";
+import livereload from "rollup-plugin-livereload";
+import { terser } from "rollup-plugin-terser";
+import sveltePreprocess from "svelte-preprocess";
+import typescript from "@rollup/plugin-typescript";
+import css from "rollup-plugin-css-only";
+import babel from "rollup-plugin-babel";
+import replace from "@rollup/plugin-replace";
+import json from "@rollup/plugin-json";
+import { config } from "dotenv";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -29,38 +29,47 @@ function serve() {
   return {
     writeBundle() {
       if (server) return;
-      server = require('child_process').spawn('npm', ['run', 'start', '--', '--dev'], {
-        stdio: ['ignore', 'inherit', 'inherit'],
-        shell: true,
-      });
+      server = require("child_process").spawn(
+        "npm",
+        ["run", "start", "--", "--dev"],
+        {
+          stdio: ["ignore", "inherit", "inherit"],
+          shell: true,
+        },
+      );
 
-      process.on('SIGTERM', toExit);
-      process.on('exit', toExit);
+      process.on("SIGTERM", toExit);
+      process.on("exit", toExit);
     },
   };
 }
 
 export default [
   {
-    input: 'src/main.ts',
+    input: "src/main.ts",
     output: {
       sourcemap: !production,
-      format: 'iife',
-      name: 'app',
-      file: 'public/build/bundle.js'
+      format: "iife",
+      name: "app",
+      file: "public/build/bundle.js",
     },
-    context: 'window',
+    context: "window",
     plugins: [
       svelte({
         preprocess: sveltePreprocess({
           sourceMap: true,
           typescript: {
             compilerOptions: {
-              target: 'ES2015',
-              module: 'ES2015',
+              target: "ES2015",
+              module: "ES2015",
             },
           },
-          replace: [[/process\.env\.(\w+)/g, (_, prop) => JSON.stringify(process.env[prop])]],
+          replace: [
+            [
+              /process\.env\.(\w+)/g,
+              (_, prop) => JSON.stringify(process.env[prop]),
+            ],
+          ],
         }),
         compilerOptions: {
           // enable run-time checks when not in production
@@ -69,7 +78,7 @@ export default [
       }),
       // we'll extract any component CSS out into
       // a separate file - better for performance
-      css({ output: 'bundle.css' }),
+      css({ output: "bundle.css" }),
 
       // If you have external dependencies installed from
       // npm, you'll most likely need these plugins. In
@@ -78,37 +87,33 @@ export default [
       // https://github.com/rollup/plugins/tree/master/packages/commonjs
       resolve({
         browser: true,
-        dedupe: ['svelte'],
+        dedupe: ["svelte"],
         preferBuiltins: false,
       }),
       commonjs(),
       nodePolyfills({
-          include: [
-              'events'
-          ]
+        include: ["events"],
       }),
 
       babel({
-        extensions: ['.js', '.ts', '.mjs', '.html', '.svelte'],
+        extensions: [".js", ".ts", ".mjs", ".html", ".svelte"],
         runtimeHelpers: true,
-        exclude: ['node_modules/@babel/**'],
+        exclude: ["node_modules/@babel/**"],
         presets: [
           [
-            '@babel/preset-env',
+            "@babel/preset-env",
             {
-              targets: { firefox: '48' },
-              exclude: [
-                '@babel/plugin-transform-regenerator'
-              ]
+              targets: { firefox: "48" },
+              exclude: ["@babel/plugin-transform-regenerator"],
             },
           ],
         ],
         plugins: [
-          '@babel/plugin-syntax-dynamic-import',
+          "@babel/plugin-syntax-dynamic-import",
           [
-            '@babel/plugin-transform-runtime',
+            "@babel/plugin-transform-runtime",
             {
-              "regenerator": false,
+              regenerator: false,
               useESModules: true,
             },
           ],
@@ -117,7 +122,7 @@ export default [
 
       replace({
         preventAssignment: true,
-        'process.env.NODE_ENV': !production ? "'development'" : "'production'",
+        "process.env.NODE_ENV": !production ? "'development'" : "'production'",
         values: configToReplace,
       }),
 
@@ -133,7 +138,7 @@ export default [
 
       // Watch the `public` directory and refresh the
       // browser on changes when not in production
-      !production && livereload('public'),
+      !production && livereload("public"),
 
       // If we're building for production (npm run build
       // instead of npm run dev), minify
@@ -144,25 +149,30 @@ export default [
     },
   },
   {
-    input: 'src/worker/authorizedWebWorker.ts',
+    input: "src/worker/authorizedWebWorker.ts",
     output: {
       sourcemap: !production,
-      format: 'iife',
-      name: 'app',
-      file: 'public/build/authorizedWebWorker.js'
+      format: "iife",
+      name: "app",
+      file: "public/build/authorizedWebWorker.js",
     },
-    context: 'window',
+    context: "window",
     plugins: [
       svelte({
         preprocess: sveltePreprocess({
           sourceMap: true,
           typescript: {
             compilerOptions: {
-              target: 'ES2015',
-              module: 'ES2015',
+              target: "ES2015",
+              module: "ES2015",
             },
           },
-          replace: [[/process\.env\.(\w+)/g, (_, prop) => JSON.stringify(process.env[prop])]],
+          replace: [
+            [
+              /process\.env\.(\w+)/g,
+              (_, prop) => JSON.stringify(process.env[prop]),
+            ],
+          ],
         }),
         compilerOptions: {
           // enable run-time checks when not in production
@@ -171,7 +181,7 @@ export default [
       }),
       // we'll extract any component CSS out into
       // a separate file - better for performance
-      css({ output: 'bundle.css' }),
+      css({ output: "bundle.css" }),
 
       // If you have external dependencies installed from
       // npm, you'll most likely need these plugins. In
@@ -180,37 +190,33 @@ export default [
       // https://github.com/rollup/plugins/tree/master/packages/commonjs
       resolve({
         browser: true,
-        dedupe: ['svelte'],
+        dedupe: ["svelte"],
         preferBuiltins: false,
       }),
       commonjs(),
       nodePolyfills({
-          include: [
-              'events'
-          ]
+        include: ["events"],
       }),
 
       babel({
-        extensions: ['.js', '.ts', '.mjs', '.html', '.svelte'],
+        extensions: [".js", ".ts", ".mjs", ".html", ".svelte"],
         runtimeHelpers: true,
-        exclude: ['node_modules/@babel/**'],
+        exclude: ["node_modules/@babel/**"],
         presets: [
           [
-            '@babel/preset-env',
+            "@babel/preset-env",
             {
-              targets: { firefox: '48' },
-              exclude: [
-                '@babel/plugin-transform-regenerator'
-              ]
+              targets: { firefox: "48" },
+              exclude: ["@babel/plugin-transform-regenerator"],
             },
           ],
         ],
         plugins: [
-          '@babel/plugin-syntax-dynamic-import',
+          "@babel/plugin-syntax-dynamic-import",
           [
-            '@babel/plugin-transform-runtime',
+            "@babel/plugin-transform-runtime",
             {
-              "regenerator": false,
+              regenerator: false,
               useESModules: true,
             },
           ],
@@ -219,7 +225,7 @@ export default [
 
       replace({
         preventAssignment: true,
-        'process.env.NODE_ENV': !production ? "'development'" : "'production'",
+        "process.env.NODE_ENV": !production ? "'development'" : "'production'",
         values: configToReplace,
       }),
 
@@ -235,7 +241,7 @@ export default [
 
       // Watch the `public` directory and refresh the
       // browser on changes when not in production
-      !production && livereload('public'),
+      !production && livereload("public"),
 
       // If we're building for production (npm run build
       // instead of npm run dev), minify
@@ -246,25 +252,30 @@ export default [
     },
   },
   {
-    input: 'src/worker/authenticationWebWorker.ts',
+    input: "src/worker/authenticationWebWorker.ts",
     output: {
       sourcemap: !production,
-      format: 'iife',
-      name: 'app',
-      file: 'public/build/authenticationWebWorker.js'
+      format: "iife",
+      name: "app",
+      file: "public/build/authenticationWebWorker.js",
     },
-    context: 'window',
+    context: "window",
     plugins: [
       svelte({
         preprocess: sveltePreprocess({
           sourceMap: true,
           typescript: {
             compilerOptions: {
-              target: 'ES2015',
-              module: 'ES2015',
+              target: "ES2015",
+              module: "ES2015",
             },
           },
-          replace: [[/process\.env\.(\w+)/g, (_, prop) => JSON.stringify(process.env[prop])]],
+          replace: [
+            [
+              /process\.env\.(\w+)/g,
+              (_, prop) => JSON.stringify(process.env[prop]),
+            ],
+          ],
         }),
         compilerOptions: {
           // enable run-time checks when not in production
@@ -273,7 +284,7 @@ export default [
       }),
       // we'll extract any component CSS out into
       // a separate file - better for performance
-      css({ output: 'bundle.css' }),
+      css({ output: "bundle.css" }),
 
       // If you have external dependencies installed from
       // npm, you'll most likely need these plugins. In
@@ -282,37 +293,33 @@ export default [
       // https://github.com/rollup/plugins/tree/master/packages/commonjs
       resolve({
         browser: true,
-        dedupe: ['svelte'],
+        dedupe: ["svelte"],
         preferBuiltins: false,
       }),
       commonjs(),
       nodePolyfills({
-          include: [
-              'events'
-          ]
+        include: ["events"],
       }),
 
       babel({
-        extensions: ['.js', '.ts', '.mjs', '.html', '.svelte'],
+        extensions: [".js", ".ts", ".mjs", ".html", ".svelte"],
         runtimeHelpers: true,
-        exclude: ['node_modules/@babel/**'],
+        exclude: ["node_modules/@babel/**"],
         presets: [
           [
-            '@babel/preset-env',
+            "@babel/preset-env",
             {
-              targets: { firefox: '48' },
-              exclude: [
-                '@babel/plugin-transform-regenerator'
-              ]
+              targets: { firefox: "48" },
+              exclude: ["@babel/plugin-transform-regenerator"],
             },
           ],
         ],
         plugins: [
-          '@babel/plugin-syntax-dynamic-import',
+          "@babel/plugin-syntax-dynamic-import",
           [
-            '@babel/plugin-transform-runtime',
+            "@babel/plugin-transform-runtime",
             {
-              "regenerator": false,
+              regenerator: false,
               useESModules: true,
             },
           ],
@@ -321,7 +328,7 @@ export default [
 
       replace({
         preventAssignment: true,
-        'process.env.NODE_ENV': !production ? "'development'" : "'production'",
+        "process.env.NODE_ENV": !production ? "'development'" : "'production'",
         values: configToReplace,
       }),
 
@@ -337,7 +344,7 @@ export default [
 
       // Watch the `public` directory and refresh the
       // browser on changes when not in production
-      !production && livereload('public'),
+      !production && livereload("public"),
 
       // If we're building for production (npm run build
       // instead of npm run dev), minify
@@ -346,5 +353,5 @@ export default [
     watch: {
       clearScreen: false,
     },
-  }
+  },
 ];

@@ -1,9 +1,9 @@
-declare var navigator:any;
-declare var window:any;
+declare var navigator: any;
+declare var window: any;
 
-import { get, writable } from 'svelte/store';
-import EventEmitter from 'events';
-import { UA, Api, client, session, cachedDatabase } from './utils/bootstrap';
+import { get, writable } from "svelte/store";
+import EventEmitter from "events";
+import { UA, Api, client, session, cachedDatabase } from "./utils/bootstrap";
 
 export const shouldGetDialogs = writable(false);
 export const connectionStatus = writable(false);
@@ -41,21 +41,24 @@ client.addEventHandler((evt) => {
     case "UpdateMessagePoll":
     case "Updates":
       getDialogs();
-      if (['UpdateNewMessage', 'UpdateNewChannelMessage'].indexOf(evt.className) > -1) {
-        client.invoke(new Api.messages.ReceivedMessages({ maxId: evt.message.id }));
+      if (
+        ["UpdateNewMessage", "UpdateNewChannelMessage"].indexOf(evt.className) >
+        -1
+      ) {
+        client.invoke(
+          new Api.messages.ReceivedMessages({ maxId: evt.message.id }),
+        );
       }
-      break
+      break;
     case "UpdatesTooLong":
       isUserAuthorized();
-      break
+      break;
     default:
-      // console.log('client.addEventHandler:', evt);
+    // console.log('client.addEventHandler:', evt);
   }
   if (evt.state) {
-    if (evt.state === 1)
-      connectionStatus.update(n => true);
-    else if (evt.state === -1)
-      connectionStatus.update(n => false);
+    if (evt.state === 1) connectionStatus.update((n) => true);
+    else if (evt.state === -1) connectionStatus.update((n) => false);
   }
 });
 
@@ -64,17 +67,18 @@ export function initilize() {
     alert("Please re-launch the app");
     window.close();
   }, 60000);
-  return client.connect()
-  .then(() => {
-    connectionStatus.update(n => true);
-    isUserAuthorized();
-  })
-  .catch(err => {
-    connectionStatus.update(n => false);
-  })
-  .finally(() => {
-    clearTimeout(tm);
-  });
+  return client
+    .connect()
+    .then(() => {
+      connectionStatus.update((n) => true);
+      isUserAuthorized();
+    })
+    .catch((err) => {
+      connectionStatus.update((n) => false);
+    })
+    .finally(() => {
+      clearTimeout(tm);
+    });
 }
 
 initilize();
@@ -83,24 +87,24 @@ export async function fetchUser() {
   const result = await client.invoke(
     new Api.users.GetUsers({
       id: [new Api.InputPeerSelf()],
-    })
+    }),
   );
-  authorizedUser.update(n => result);
+  authorizedUser.update((n) => result);
 }
 
 export async function isUserAuthorized() {
   try {
     const authorized = await client.isUserAuthorized();
-    authorizationStatus.update(n => authorized);
+    authorizationStatus.update((n) => authorized);
     if (authorized) {
       await fetchUser();
       getDialogs();
-      if (window['authenticationWebWorker']) {
-        window['authenticationWebWorker'].postMessage({ type: -100 })
-        window['authenticationWebWorker'].terminate();
+      if (window["authenticationWebWorker"]) {
+        window["authenticationWebWorker"].postMessage({ type: -100 });
+        window["authenticationWebWorker"].terminate();
       }
-      window['authorizedWebWorker'] = authorizedWebWorker();
-      window['authorizedWebWorker'].onmessage = async (e) => {
+      window["authorizedWebWorker"] = authorizedWebWorker();
+      window["authorizedWebWorker"].onmessage = async (e) => {
         switch (e.data.type) {
           case -1:
             console.error(e.data.params);
@@ -110,49 +114,62 @@ export async function isUserAuthorized() {
             break;
           case 1:
             // downloadedMediaEmitter.update(n => e.data);
-            downloadedMediaEmitter.emit('message', e.data);
+            downloadedMediaEmitter.emit("message", e.data);
             break;
           case 2:
             const base64 = await bufferToBase64(e.data.result);
-            (await cachedDatabase).put('profilePhotos', base64, e.data.hash.photoId);
+            (await cachedDatabase).put(
+              "profilePhotos",
+              base64,
+              e.data.hash.photoId,
+            );
             updateThumbCached(e.data.hash.photoId, base64);
             break;
         }
-      }
+      };
       try {
-        let pushSubscription = await (await cachedDatabase).get('appPreferences', 'pushSubscription');
+        let pushSubscription = await (
+          await cachedDatabase
+        ).get("appPreferences", "pushSubscription");
         if (pushSubscription == null) {
           try {
             await unsubscribePush();
-          } catch(err){}
+          } catch (err) {}
           pushSubscription = await subscribePush();
           pushSubscription = pushSubscription.toJSON();
-          delete pushSubscription['expirationTime'];
+          delete pushSubscription["expirationTime"];
           const result = await registerDevice(client, pushSubscription);
           // console.log('registerDevice result:', result);
         } else {
-          let updatedPushSubscription = await (await cachedDatabase).get('appPreferences', 'updatedPushSubscription');
+          let updatedPushSubscription = await (
+            await cachedDatabase
+          ).get("appPreferences", "updatedPushSubscription");
           if (updatedPushSubscription != null) {
             let result = await unregisterDevice(client, pushSubscription);
             // console.log('unregisterDevice result:', result);
             result = await registerDevice(client, updatedPushSubscription);
             // console.log('registerDevice result:', result);
-            (await cachedDatabase).delete('appPreferences', 'updatedPushSubscription');
+            (await cachedDatabase).delete(
+              "appPreferences",
+              "updatedPushSubscription",
+            );
           }
         }
       } catch (err) {
         console.error(err);
       }
     } else {
-      await (await cachedDatabase).delete('appPreferences', 'pushSubscription');
-      await (await cachedDatabase).delete('appPreferences', 'updatedPushSubscription');
+      await (await cachedDatabase).delete("appPreferences", "pushSubscription");
+      await (
+        await cachedDatabase
+      ).delete("appPreferences", "updatedPushSubscription");
       await client.disconnect();
-      if (window['authorizedWebWorker']) {
-        window['authorizedWebWorker'].postMessage({ type: -100 })
-        window['authorizedWebWorker'].terminate();
+      if (window["authorizedWebWorker"]) {
+        window["authorizedWebWorker"].postMessage({ type: -100 });
+        window["authorizedWebWorker"].terminate();
       }
-      window['authenticationWebWorker'] = authenticationWebWorker();
-      window['authenticationWebWorker'].onmessage = (e) => {
+      window["authenticationWebWorker"] = authenticationWebWorker();
+      window["authenticationWebWorker"].onmessage = (e) => {
         // console.log('authenticationWebWorker:', e.data.type, e.data.params.state, e.data.params.className, e.data.params.data);
         switch (e.data.type) {
           case -1:
@@ -170,12 +187,12 @@ export async function isUserAuthorized() {
           case -6:
           case 7:
           case -7:
-            dispatchMessageToClient.emit('message', e.data);
+            dispatchMessageToClient.emit("message", e.data);
             break;
         }
-      }
-      dispatchMessageToWorker.addListener('message', (data: any) => {
-        window['authenticationWebWorker'].postMessage(data);
+      };
+      dispatchMessageToWorker.addListener("message", (data: any) => {
+        window["authenticationWebWorker"].postMessage(data);
       });
     }
   } catch (err) {
@@ -199,7 +216,7 @@ export async function getDialogs() {
     chats.forEach((chat, index) => {
       chat.__isSavedMessages = false;
       if (chat.id.value === user[0].id.value) {
-        chat.name = 'Saved Messages';
+        chat.name = "Saved Messages";
         chat.entity.__isSavedMessages = true;
       }
       chat.entity.__muted = false;
@@ -209,28 +226,39 @@ export async function getDialogs() {
       if (chatPreferencesTask[chat.entity.id.value.toString()] == null) {
         chatPreferencesTask[chat.entity.id.value.toString()] = {};
       }
-      chatPreferencesTask[chat.entity.id.value.toString()]['muted'] = chat.dialog.notifySettings.muteUntil || false;
-      chatPreferencesTask[chat.entity.id.value.toString()]['scrollAt'] = chat.message.id;
+      chatPreferencesTask[chat.entity.id.value.toString()]["muted"] =
+        chat.dialog.notifySettings.muteUntil || false;
+      chatPreferencesTask[chat.entity.id.value.toString()]["scrollAt"] =
+        chat.message.id;
       chat.iconRef = chat.id.toString();
-      if (!(chat.entity.username == null && chat.entity.phone == null) && chat.entity.photo != null && chat.entity.photo.photoId != null && chat.entity.photo.className !== 'ChatPhotoEmpty') {
+      if (
+        !(chat.entity.username == null && chat.entity.phone == null) &&
+        chat.entity.photo != null &&
+        chat.entity.photo.photoId != null &&
+        chat.entity.photo.className !== "ChatPhotoEmpty"
+      ) {
         chat.iconRef = chat.entity.photo.photoId.toString();
         httpTasks.push({
-          url: `https://api.codetabs.com/v1/proxy/?quest=https://t.me/${chat.entity.phone === "42777" ? 'telegram' : chat.entity.username}`,
+          url: `https://api.codetabs.com/v1/proxy/?quest=https://t.me/${chat.entity.phone === "42777" ? "telegram" : chat.entity.username}`,
           photoId: chat.entity.photo.photoId.toString(),
-          chat: chat
+          chat: chat,
         });
-      } else if (chat.entity.photo != null && chat.entity.photo.photoId != null && chat.entity.photo.className !== 'ChatPhotoEmpty') {
+      } else if (
+        chat.entity.photo != null &&
+        chat.entity.photo.photoId != null &&
+        chat.entity.photo.className !== "ChatPhotoEmpty"
+      ) {
         chat.iconRef = chat.entity.photo.photoId.toString();
         websocketTasks.push({
           photoId: chat.entity.photo.photoId.toString(),
-          chat: chat
+          chat: chat,
         });
       }
-      const letters = chat.name.split(' ').map(text => {
+      const letters = chat.name.split(" ").map((text) => {
         return text[0];
       });
     });
-    dialogList.update(n => chats);
+    dialogList.update((n) => chats);
     // console.log(`getDialogs: ${new Date().getTime() - _start}ms`);
     runTask(httpTasks, websocketTasks, chatPreferencesTask);
     return chats;
@@ -240,11 +268,11 @@ export async function getDialogs() {
 }
 
 export function getDialogList() {
-  return get(dialogList)
+  return get(dialogList);
 }
 
 export function getCachedThumbnails() {
-  return get(cachedThumbnails)
+  return get(cachedThumbnails);
 }
 
 export function getAuthorizedUser() {
@@ -252,21 +280,24 @@ export function getAuthorizedUser() {
 }
 
 // [NON-BLOCKING]
-export async function runTask(httpTasks, websocketTasks, chatPreferencesTask = {}) {
+export async function runTask(
+  httpTasks,
+  websocketTasks,
+  chatPreferencesTask = {},
+) {
   // const lbl = `chatPreferencesTask ${Object.keys(chatPreferencesTask).length}`;
   // console.time(lbl);
   for (let chatId in chatPreferencesTask) {
     try {
-      let pref = await (await cachedDatabase).get('chatPreferences', chatId);
-      if (pref == null)
-        pref = {};
-      pref['muted'] = chatPreferencesTask[chatId]['muted'];
-      if (pref['scrollAt'] == null) {
-        pref['scrollAt'] = chatPreferencesTask[chatId]['scrollAt'];
+      let pref = await (await cachedDatabase).get("chatPreferences", chatId);
+      if (pref == null) pref = {};
+      pref["muted"] = chatPreferencesTask[chatId]["muted"];
+      if (pref["scrollAt"] == null) {
+        pref["scrollAt"] = chatPreferencesTask[chatId]["scrollAt"];
       }
-      await (await cachedDatabase).put('chatPreferences', pref, chatId);
+      await (await cachedDatabase).put("chatPreferences", pref, chatId);
     } catch (err) {
-      console.log('chatPreferencesTask:', err);
+      console.log("chatPreferencesTask:", err);
     }
   }
   // console.timeEnd(lbl);
@@ -280,33 +311,47 @@ export async function runTask(httpTasks, websocketTasks, chatPreferencesTask = {
     }
     skipHttpTasks.push(task.photoId.toString());
     try {
-      let cache = await (await cachedDatabase).get('profilePhotos', task.photoId);
+      let cache = await (
+        await cachedDatabase
+      ).get("profilePhotos", task.photoId);
       if (cache != null) {
         updateThumbCached(task.photoId, cache);
       } else {
-        const html = new DOMParser().parseFromString(await (await fetch(task.url)).text(), 'text/html');
-        const images = html.getElementsByClassName('tgme_page_photo_image');
+        const html = new DOMParser().parseFromString(
+          await (await fetch(task.url)).text(),
+          "text/html",
+        );
+        const images = html.getElementsByClassName("tgme_page_photo_image");
         if (images.length === 0) {
-          throw('No profile picture: tgme_page_photo_image');
+          throw "No profile picture: tgme_page_photo_image";
         } else {
           const img = images[0] as HTMLImageElement;
-          const blob = await (await fetch(img.src)).blob()
+          const blob = await (await fetch(img.src)).blob();
           const base64 = await blobToBase64(blob);
-          await (await cachedDatabase).put('profilePhotos', base64, task.photoId);
+          await (
+            await cachedDatabase
+          ).put("profilePhotos", base64, task.photoId);
           cache = base64;
-          updateThumbCached(task.photoId, cache)
+          updateThumbCached(task.photoId, cache);
         }
-      };
+      }
     } catch (err) {
-      console.log('httpTasks:', err);
-      if (window['authorizedWebWorker']) {
-        window['authorizedWebWorker'].postMessage({
+      console.log("httpTasks:", err);
+      if (window["authorizedWebWorker"]) {
+        window["authorizedWebWorker"].postMessage({
           type: 2,
           params: {
             photoId: task.photoId.toString(),
-            chatId: task.chat.entity ? task.chat.entity.id.toString() : task.chat.id.toString(),
-            origin: task.origin ? { chatId: task.origin.chat.id.toString(), messageId: task.origin.message.id } : null
-          }
+            chatId: task.chat.entity
+              ? task.chat.entity.id.toString()
+              : task.chat.id.toString(),
+            origin: task.origin
+              ? {
+                  chatId: task.origin.chat.id.toString(),
+                  messageId: task.origin.message.id,
+                }
+              : null,
+          },
         });
       }
     }
@@ -322,23 +367,32 @@ export async function runTask(httpTasks, websocketTasks, chatPreferencesTask = {
     }
     skipWebsocketTasks.push(task.photoId.toString());
     try {
-      let cache = await (await cachedDatabase).get('profilePhotos', task.photoId.toString());
+      let cache = await (
+        await cachedDatabase
+      ).get("profilePhotos", task.photoId.toString());
       if (cache != null) {
         updateThumbCached(task.photoId, cache);
       } else {
-        if (window['authorizedWebWorker']) {
-          window['authorizedWebWorker'].postMessage({
+        if (window["authorizedWebWorker"]) {
+          window["authorizedWebWorker"].postMessage({
             type: 2,
             params: {
               photoId: task.photoId.toString(),
-              chatId: task.chat.entity ? task.chat.entity.id.toString() : task.chat.id.toString(),
-              origin: task.origin ? { chatId: task.origin.chat.id.toString(), messageId: task.origin.message.id } : null
-            }
+              chatId: task.chat.entity
+                ? task.chat.entity.id.toString()
+                : task.chat.id.toString(),
+              origin: task.origin
+                ? {
+                    chatId: task.origin.chat.id.toString(),
+                    messageId: task.origin.message.id,
+                  }
+                : null,
+            },
           });
         }
       }
     } catch (err) {
-      console.log('websocketTasks:', err);
+      console.log("websocketTasks:", err);
     }
   });
   // console.timeEnd(lbl3);
@@ -347,7 +401,7 @@ export async function runTask(httpTasks, websocketTasks, chatPreferencesTask = {
 export async function updateThumbCached(ref, base64) {
   const cached = await get(cachedThumbnails);
   cached[ref] = base64;
-  cachedThumbnails.update(n => cached);
+  cachedThumbnails.update((n) => cached);
 }
 
 export function bufferToBase64(buffer) {
@@ -359,7 +413,11 @@ export function bufferToBase64(buffer) {
     reader.onerror = (err) => {
       reject(err);
     };
-    reader.readAsDataURL(new Blob([new Uint8Array(buffer, 0, buffer.length)], {type : 'image/jpeg'}));
+    reader.readAsDataURL(
+      new Blob([new Uint8Array(buffer, 0, buffer.length)], {
+        type: "image/jpeg",
+      }),
+    );
   });
 }
 
@@ -377,40 +435,39 @@ function blobToBase64(blob) {
 }
 
 function authorizedWebWorker() {
-  if (window['authorizedWebWorker'])
-    window['authorizedWebWorker'].terminate();
-  const worker = new Worker('/sw_authorized_web_worker.js');
+  if (window["authorizedWebWorker"]) window["authorizedWebWorker"].terminate();
+  const worker = new Worker("/sw_authorized_web_worker.js");
   worker.postMessage({
     type: 0,
     params: {
       dcId: session.dcId,
       serverAddress: session.serverAddress,
       port: session.port,
-      authKey: session.getAuthKey(session.dcId)
-    }
+      authKey: session.getAuthKey(session.dcId),
+    },
   });
   return worker;
 }
 
 function authenticationWebWorker() {
-  if (window['authenticationWebWorker'])
-    window['authenticationWebWorker'].terminate();
-  const worker = new Worker('/sw_authentication_web_worker.js');
+  if (window["authenticationWebWorker"])
+    window["authenticationWebWorker"].terminate();
+  const worker = new Worker("/sw_authentication_web_worker.js");
   worker.postMessage({
     type: 0,
     params: {
       dcId: session.dcId,
       serverAddress: session.serverAddress,
       port: session.port,
-      authKey: session.getAuthKey(session.dcId)
-    }
+      authKey: session.getAuthKey(session.dcId),
+    },
   });
   return worker;
 }
 
 document.addEventListener("visibilitychange", () => {
   try {
-    if (document.visibilityState === 'visible') {
+    if (document.visibilityState === "visible") {
       client.invoke(new Api.account.UpdateStatus({ offline: false }));
     } else {
       client.invoke(new Api.account.UpdateStatus({ offline: true }));
@@ -418,101 +475,103 @@ document.addEventListener("visibilitychange", () => {
   } catch (err) {}
 });
 
-
 export function subscribePush(): Promise<any> {
   return new Promise((resolve, reject) => {
     Notification.requestPermission()
-    .then((result) => {
-      if (result === 'granted')
-        return navigator.serviceWorker.ready;
-      return Promise.reject('Denied');
-    })
-    .then((reg) => {
-      return reg.pushManager.subscribe({userVisibleOnly: true});
-    })
-    .then((subscription) => {
-      if (subscription)
-        resolve(subscription);
-      else
-        reject(subscription);
-    })
-    .catch((err) => {
-      reject(err);
-    });
+      .then((result) => {
+        if (result === "granted") return navigator.serviceWorker.ready;
+        return Promise.reject("Denied");
+      })
+      .then((reg) => {
+        return reg.pushManager.subscribe({ userVisibleOnly: true });
+      })
+      .then((subscription) => {
+        if (subscription) resolve(subscription);
+        else reject(subscription);
+      })
+      .catch((err) => {
+        reject(err);
+      });
   });
 }
 
 export function unsubscribePush(): Promise<any> {
   return new Promise((resolve, reject) => {
     getPushSubscription()
-    .then((subscription) => {
-      if (!subscription)
-        reject('Please subscribe');
-      else
-        return subscription.unsubscribe();
-    })
-    .then((result) => {
-      resolve(result)
-    })
-    .catch((err) => {
-      reject(err);
-    });
+      .then((subscription) => {
+        if (!subscription) reject("Please subscribe");
+        else return subscription.unsubscribe();
+      })
+      .then((result) => {
+        resolve(result);
+      })
+      .catch((err) => {
+        reject(err);
+      });
   });
 }
 
 export function getPushSubscription(): Promise<any> {
   return new Promise((resolve, reject) => {
     navigator.serviceWorker.ready
-    .then((reg) => {
-      return reg.pushManager.getSubscription()
-    })
-    .then((subscription) => {
-      if (!subscription)
-        reject('Please subscribe');
-      else
-        resolve(subscription);
-    })
-    .catch((err) => {
-      reject(err);
-    });
+      .then((reg) => {
+        return reg.pushManager.getSubscription();
+      })
+      .then((subscription) => {
+        if (!subscription) reject("Please subscribe");
+        else resolve(subscription);
+      })
+      .catch((err) => {
+        reject(err);
+      });
   });
 }
 
 export async function registerDevice(client, subscription) {
-  const result = await client.invoke(new Api.account.RegisterDevice({
-    tokenType: 10,
-    token: JSON.stringify(subscription),
-    otherUids: [],
-    appSandbox: false,
-    secret: client.session.getAuthKey().getKey(),
-  }));
-  (await cachedDatabase).put('appPreferences', subscription, 'pushSubscription');
+  const result = await client.invoke(
+    new Api.account.RegisterDevice({
+      tokenType: 10,
+      token: JSON.stringify(subscription),
+      otherUids: [],
+      appSandbox: false,
+      secret: client.session.getAuthKey().getKey(),
+    }),
+  );
+  (await cachedDatabase).put(
+    "appPreferences",
+    subscription,
+    "pushSubscription",
+  );
   return result;
 }
 
 export async function unregisterDevice(client, subscription) {
-  const result = await client.invoke(new Api.account.UnregisterDevice({
-    tokenType: 10,
-    token: JSON.stringify(subscription),
-    otherUids: [],
-  }));
-  (await cachedDatabase).delete('appPreferences', 'pushSubscription');
+  const result = await client.invoke(
+    new Api.account.UnregisterDevice({
+      tokenType: 10,
+      token: JSON.stringify(subscription),
+      otherUids: [],
+    }),
+  );
+  (await cachedDatabase).delete("appPreferences", "pushSubscription");
   return result;
 }
 
 export async function manuallySubscribePushNotification(client) {
   try {
-    (await cachedDatabase).delete('appPreferences', 'updatedPushSubscription');
-    let pushSubscription = await (await cachedDatabase).get('appPreferences', 'pushSubscription');
+    (await cachedDatabase).delete("appPreferences", "updatedPushSubscription");
+    let pushSubscription = await (
+      await cachedDatabase
+    ).get("appPreferences", "pushSubscription");
     if (pushSubscription == null) {
       await unregisterDevice(client, pushSubscription);
     }
     try {
       await unsubscribePush();
-    } catch(err){}
+    } catch (err) {}
     pushSubscription = await subscribePush();
     pushSubscription = pushSubscription.toJSON();
-    delete pushSubscription['expirationTime'];
+    delete pushSubscription["expirationTime"];
     await registerDevice(client, pushSubscription);
     return Promise.resolve(true);
   } catch (err) {

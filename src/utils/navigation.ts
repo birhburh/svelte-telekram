@@ -1,34 +1,34 @@
 function keydownEventHandler(evt, scope) {
   switch (evt.key) {
-    case 'Backspace':
-    case 'EndCall':
+    case "Backspace":
+    case "EndCall":
       scope.backspaceListener(evt);
       break;
-    case 'SoftLeft':
-    case 'PageUp':
-    case 'Shift':
+    case "SoftLeft":
+    case "PageUp":
+    case "Shift":
       scope.softkeyLeftListener(evt);
       evt.preventDefault();
       break;
-    case 'SoftRight':
-    case 'PageDown':
-    case 'Control':
+    case "SoftRight":
+    case "PageDown":
+    case "Control":
       scope.softkeyRightListener(evt);
       evt.preventDefault();
       break;
-    case 'Enter':
+    case "Enter":
       scope.enterListener(evt);
       break;
-    case 'ArrowUp':
+    case "ArrowUp":
       scope.arrowUpListener(evt);
       break;
-    case 'ArrowDown':
+    case "ArrowDown":
       scope.arrowDownListener(evt);
       break;
-    case 'ArrowLeft':
+    case "ArrowLeft":
       scope.arrowLeftListener(evt);
       break;
-    case 'ArrowRight':
+    case "ArrowRight":
       scope.arrowRightListener(evt);
       break;
   }
@@ -43,13 +43,17 @@ function isElementInViewport(el, marginTop = 0, marginBottom = 0) {
   return (
     rect.top >= 0 + marginTop &&
     rect.left >= 0 &&
-    rect.bottom <= ((window.innerHeight || document.documentElement.clientHeight) - marginBottom) && /* or $(window).height() */
-    rect.right <= (window.innerWidth || document.documentElement.clientWidth) /* or $(window).width() */
+    rect.bottom <=
+      (window.innerHeight || document.documentElement.clientHeight) -
+        marginBottom /* or $(window).height() */ &&
+    rect.right <=
+      (window.innerWidth ||
+        document.documentElement.clientWidth) /* or $(window).width() */
   );
 }
 
 function dispatchScroll(target, newScrollTop) {
-  target.scroll({ top: newScrollTop, behavior: 'smooth' });
+  target.scroll({ top: newScrollTop, behavior: "smooth" });
 }
 
 function dispatchFocus(target, newScrollTop) {
@@ -97,22 +101,21 @@ class KaiNavigator {
   backspaceListener: Function = (evt) => {};
 
   constructor(opts = {}) {
-    for(const x in opts) {
-      if (typeof opts[x] === 'function')
-        typeof opts[x];
+    for (const x in opts) {
+      if (typeof opts[x] === "function") typeof opts[x];
       this[x] = opts[x];
     }
     this.eventHandler = (evt: any) => {
       keydownEventHandler(evt, this);
-    }
+    };
   }
 
   navigateListNav(next) {
-    return this.nav(next, 'verticalNavIndex', 'verticalNavClass');
+    return this.nav(next, "verticalNavIndex", "verticalNavClass");
   }
 
   navigateTabNav(next) {
-    return this.nav(next, 'horizontalNavIndex', 'horizontalNavClass');
+    return this.nav(next, "horizontalNavIndex", "horizontalNavClass");
   }
 
   nav(next, navIndex, navClass) {
@@ -122,7 +125,7 @@ class KaiNavigator {
       return;
     }
     var move = currentIndex + next;
-    var cursor:any = nav[move];
+    var cursor: any = nav[move];
     if (cursor != undefined) {
       cursor.focus();
       this[navIndex] = move;
@@ -136,18 +139,25 @@ class KaiNavigator {
       cursor.focus();
       this[navIndex] = move;
     }
-    cursor.classList.add('focus');
+    cursor.classList.add("focus");
     if (currentIndex > -1 && nav.length > 1) {
-      nav[currentIndex].classList.remove('focus');
+      nav[currentIndex].classList.remove("focus");
     }
     if (!isElementInViewport(cursor)) {
-      var marginTop = 0, marginBottom = 0;
+      var marginTop = 0,
+        marginBottom = 0;
       if (cursor.parentElement.getAttribute("data-pad-top"))
-        marginTop = parseFloat(cursor.parentElement.getAttribute("data-pad-top"));
+        marginTop = parseFloat(
+          cursor.parentElement.getAttribute("data-pad-top"),
+        );
       if (cursor.parentElement.getAttribute("data-pad-bottom"))
-        marginBottom = parseFloat(cursor.parentElement.getAttribute("data-pad-bottom"));
-      let offsetTop = cursor.offsetTop - ((cursor.parentElement.clientHeight - marginTop - marginBottom) / 2);
-      if ((cursor.clientHeight / cursor.parentElement.clientHeight) >= 0.7)
+        marginBottom = parseFloat(
+          cursor.parentElement.getAttribute("data-pad-bottom"),
+        );
+      let offsetTop =
+        cursor.offsetTop -
+        (cursor.parentElement.clientHeight - marginTop - marginBottom) / 2;
+      if (cursor.clientHeight / cursor.parentElement.clientHeight >= 0.7)
         offsetTop = cursor.offsetTop;
       dispatchScroll(cursor.parentElement, offsetTop);
       setTimeout(() => {
@@ -156,47 +166,41 @@ class KaiNavigator {
         }
       }, 150);
     }
-    if (['INPUT', 'TEXTAREA'].indexOf(document.activeElement.tagName) > -1) {
+    if (["INPUT", "TEXTAREA"].indexOf(document.activeElement.tagName) > -1) {
       if (document.activeElement instanceof HTMLElement) {
         document.activeElement.blur();
       }
     }
     const keys = Object.keys(cursor.children);
     for (var k in keys) {
-      if (['INPUT', 'TEXTAREA'].indexOf(cursor.children[k].tagName) > -1) {
+      if (["INPUT", "TEXTAREA"].indexOf(cursor.children[k].tagName) > -1) {
         setTimeout(() => {
           cursor.children[k].focus();
-          cursor.children[k].selectionStart = cursor.children[k].selectionEnd = (cursor.children[k].value.length || cursor.children[k].value.length);
+          cursor.children[k].selectionStart = cursor.children[k].selectionEnd =
+            cursor.children[k].value.length || cursor.children[k].value.length;
         }, 100);
         break;
       }
     }
   }
 
-  attachListener(next:number = 1) {
-    document.addEventListener('keydown', this.eventHandler);
-    if (!this.init)
-      this.init = true;
-    else
-      return;
+  attachListener(next: number = 1) {
+    document.addEventListener("keydown", this.eventHandler);
+    if (!this.init) this.init = true;
+    else return;
     setTimeout(() => {
-      if (this.verticalNavClass != null)
-        this.navigateListNav(next);
-      else if (this.horizontalNavClass != null)
-        this.navigateTabNav(next);
+      if (this.verticalNavClass != null) this.navigateListNav(next);
+      else if (this.horizontalNavClass != null) this.navigateTabNav(next);
     }, 100);
   }
 
   detachListener() {
-    document.removeEventListener('keydown', this.eventHandler);
+    document.removeEventListener("keydown", this.eventHandler);
   }
 }
 
 const createKaiNavigator = (opts = {}) => {
   return new KaiNavigator(opts);
-}
+};
 
-export {
-  createKaiNavigator,
-  KaiNavigator
-}
+export { createKaiNavigator, KaiNavigator };
