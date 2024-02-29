@@ -976,11 +976,13 @@
 
 <main id="home-screen" data-pad-top="28" data-pad-bottom="30">
   {#if authStatus === false}
-    {#if phoneCodeHash === null}
+    {#if webWorkerStatus === false}
+      <LoadingBar />
+    {:else if phoneCodeHash === null}
       <TextInputField
         className={navClass}
         label="Phone Number"
-        placeholder={webWorkerStatus ? "Phone Number" : "Connecting..."}
+        placeholder={"Phone Number"}
         value={phoneNumber}
         type="tel"
         onInput={onInputPhoneNumber}
