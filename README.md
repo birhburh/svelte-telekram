@@ -14,8 +14,14 @@ The code is automatically styled via prettier. [![code style: prettier](https://
 
 ### Deploying to a device
 
-[**Read this before continue**](https://github.com/arma7x/svelte-telekram/issues/2)
+#### 1. Get your API Id and API Hash from Telegram
+
+1. Get your own `api_id` and `api_hash` at [https://my.telegram.org](https://my.telegram.org). Guide [https://core.telegram.org/api/obtaining_api_id] https://core.telegram.org/api/obtaining_api_id
+2. Copy and rename `.env.example` to `.env`
+3. Replace the value inside `.env`
+
+#### 2. Deploy the app to your device
 
 1. Connect your device to your computer and make sure it appears in WebIDE.
-2. `npm run build`
+2. Run `npm run build`
 3. In WebIDE, load the `/public` folder as a packaged app.
