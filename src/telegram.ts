@@ -1,9 +1,9 @@
 declare var navigator: any;
 declare var window: any;
 
-import EventEmitter from "events";
 import { get, writable } from "svelte/store";
-import { Api, cachedDatabase, client, session } from "./utils/bootstrap";
+import EventEmitter from "events";
+import { UA, Api, client, session, cachedDatabase } from "./utils/bootstrap";
 
 export const shouldGetDialogs = writable(false);
 export const connectionStatus = writable(false);

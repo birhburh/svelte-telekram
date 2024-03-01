@@ -1,17 +1,17 @@
-import Dummy from "./Dummy.svelte";
-import MessageMediaContact from "./MessageMediaContact.svelte";
-import MessageMediaDice from "./MessageMediaDice.svelte";
 import * as MessageMediaDocument from "./MessageMediaDocument";
-import MessageMediaEmpty from "./MessageMediaEmpty.svelte";
-import MessageMediaGame from "./MessageMediaGame.svelte";
-import MessageMediaGeo from "./MessageMediaGeo.svelte";
 import MessageMediaGeoLive from "./MessageMediaGeoLive.svelte";
-import MessageMediaInvoice from "./MessageMediaInvoice.svelte";
+import MessageMediaEmpty from "./MessageMediaEmpty.svelte";
 import MessageMediaPhoto from "./MessageMediaPhoto.svelte";
+import MessageMediaGeo from "./MessageMediaGeo.svelte";
 import MessageMediaPoll from "./MessageMediaPoll.svelte";
-import MessageMediaUnsupported from "./MessageMediaUnsupported.svelte";
 import MessageMediaVenue from "./MessageMediaVenue.svelte";
+import MessageMediaGame from "./MessageMediaGame.svelte";
+import MessageMediaInvoice from "./MessageMediaInvoice.svelte";
+import MessageMediaDice from "./MessageMediaDice.svelte";
+import MessageMediaContact from "./MessageMediaContact.svelte";
 import MessageMediaWebPage from "./MessageMediaWebPage.svelte";
+import MessageMediaUnsupported from "./MessageMediaUnsupported.svelte";
+import Dummy from "./Dummy.svelte";
 
 export {
   MessageMediaDocument,
