@@ -1,16 +1,16 @@
-import svelte from "rollup-plugin-svelte";
 import commonjs from "@rollup/plugin-commonjs";
-import nodePolyfills from "rollup-plugin-polyfill-node";
+import json from "@rollup/plugin-json";
 import resolve from "@rollup/plugin-node-resolve";
+import replace from "@rollup/plugin-replace";
+import typescript from "@rollup/plugin-typescript";
+import { config } from "dotenv";
+import babel from "rollup-plugin-babel";
+import css from "rollup-plugin-css-only";
 import livereload from "rollup-plugin-livereload";
+import nodePolyfills from "rollup-plugin-polyfill-node";
+import svelte from "rollup-plugin-svelte";
 import { terser } from "rollup-plugin-terser";
 import sveltePreprocess from "svelte-preprocess";
-import typescript from "@rollup/plugin-typescript";
-import css from "rollup-plugin-css-only";
-import babel from "rollup-plugin-babel";
-import replace from "@rollup/plugin-replace";
-import json from "@rollup/plugin-json";
-import { config } from "dotenv";
 
 const production = !process.env.ROLLUP_WATCH;
 

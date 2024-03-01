@@ -1,5 +1,5 @@
-import "./utils/runtime";
 import App from "./App.svelte";
+import "./utils/runtime";
 
 const app = new App({
   target: document.body,
