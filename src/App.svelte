@@ -22,14 +22,14 @@
   <div id="kai-status-bar"></div>
   <AppBar bind:this={appBar} />
   <main>
-    <Route primary={false} path="index.html" let:location let:navigate>
-      <svelte:component this={Home} {location} {navigate} {getAppProp} />
+    <Route primary={false} path="index.html">
+      <svelte:component this={Home} {getAppProp} />
     </Route>
-    <Route primary={false} path="/" let:location let:navigate>
-      <svelte:component this={Home} {location} {navigate} {getAppProp} />
+    <Route primary={false} path="/">
+      <svelte:component this={Home} {getAppProp} />
     </Route>
-    <Route primary={false} path="room" let:location let:navigate>
-      <svelte:component this={Room} {location} {navigate} {getAppProp} />
+    <Route primary={false} path="room">
+      <svelte:component this={Room} {getAppProp} />
     </Route>
   </main>
   <SoftwareKey bind:this={softwareKey} />

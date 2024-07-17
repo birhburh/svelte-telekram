@@ -1,7 +1,24 @@
 {
   "target": "es5",
   "extends": "@tsconfig/svelte/tsconfig.json",
-  "compilerOptions": { "resolveJsonModule": true, "noImplicitAny": false },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules/*", "__sapper__/*", "public/*"]
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "noImplicitAny": false,
+    "lib": [
+      "es5",
+      "dom",
+      "es2018",
+      "es2018.promise"
+    ],
+    "strictNullChecks": false,
+    "skipLibCheck": true,
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules/*",
+    "__sapper__/*",
+    "public/*"
+  ],
 }

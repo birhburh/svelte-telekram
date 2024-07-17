@@ -1,6 +1,7 @@
 <svelte:options accessors immutable={true} />
 
 <script lang="ts">
+  import { useLocation } from "svelte-routing";
   import { navigate as goto } from "svelte-routing";
   import { createKaiNavigator, KaiNavigator } from "../utils/navigation";
   import { onMount, onDestroy, afterUpdate } from "svelte";
@@ -18,8 +19,7 @@
   import { TextAreaDialog, OptionMenu, Dialog } from "../components";
   import Replies from "../widgets/Replies.svelte";
 
-  export let location: any;
-  export let navigate: any;
+  let location = useLocation();
   export let getAppProp: Function;
 
   let sendMessageDialog: TextAreaDialog;
@@ -192,7 +192,7 @@
         fetchMessages(location.state.entity, location.state.scrollAt);
       } else {
         shouldGetDialogs.update((n) => true);
-        navigate(-1);
+        goto(-1);
       }
     },
   };

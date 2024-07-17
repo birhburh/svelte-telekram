@@ -75,6 +75,7 @@ export function initialize() {
       isUserAuthorized();
     })
     .catch((err) => {
+      console.log(`err: ${err}`);
       connectionStatus.update((n) => false);
     })
     .finally(() => {
@@ -95,7 +96,9 @@ export async function fetchUser() {
 
 export async function isUserAuthorized() {
   try {
+    console.log(`isUserAuthorized`);
     const authorized = await client.isUserAuthorized();
+    console.log(`authorized: ${authorized}`);
     authorizationStatus.update((n) => authorized);
     if (authorized) {
       await fetchUser();
@@ -171,7 +174,7 @@ export async function isUserAuthorized() {
       }
       window["authenticationWebWorker"] = authenticationWebWorker();
       window["authenticationWebWorker"].onmessage = (e) => {
-        // console.log('authenticationWebWorker:', e.data.type, e.data.params.state, e.data.params.className, e.data.params.data);
+        console.log('authenticationWebWorker:', e.data.type, e.data.params.state, e.data.params.className, e.data.params.data);
         switch (e.data.type) {
           case -1:
           case 0:

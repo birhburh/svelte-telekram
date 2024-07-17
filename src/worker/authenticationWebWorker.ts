@@ -1,8 +1,8 @@
 declare var navigator: any;
-declare var telegram: any;
 declare var idb: any;
 
 import { parseUserAgent } from "../utils/misc";
+import telegram from "telegram";
 
 const UA = parseUserAgent(navigator.userAgent);
 

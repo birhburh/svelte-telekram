@@ -704,6 +704,7 @@
   }
 
   async function handleWebWorkerMessage(data: any) {
+    console.log(`handleWebWorkerMessage: ${data.type}`);
     try {
       switch (data.type) {
         case -1:
