@@ -5,7 +5,7 @@
   import { createKaiNavigator, KaiNavigator } from "../../utils/navigation";
   import * as Media from "./media";
 
-  import { DOMPurify } from "dompurify";
+  import DOMPurify from "dompurify";
   import { Api, client } from "../../utils/bootstrap";
   import { cachedThumbnails, getAuthorizedUser } from "../../telegram";
 
