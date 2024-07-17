@@ -2,9 +2,8 @@ declare var navigator: any;
 declare var window: any;
 
 import { get, writable } from "svelte/store";
-import EventEmitter from "events";
+import { EventEmitter } from "events";
 import { UA, Api, client, session, cachedDatabase } from "./utils/bootstrap";
-import type { Dialog } from "telegram/tl/custom/dialog";
 
 export const shouldGetDialogs = writable(false);
 export const connectionStatus = writable(false);
@@ -208,15 +207,15 @@ export async function getDialogs() {
     const chats = await client.getDialogs({
       offsetPeer: new Api.InputPeerSelf(),
       limit: 100,
-      ignorePinned: true,
-      folder: 0,
+      excludePinned: true,
+      folderId: 0,
     });
     const httpTasks = [];
     const websocketTasks = [];
     const chatPreferencesTask = {};
-    chats.forEach((chat: Dialog, index) => {
+    chats.forEach((chat, index) => {
       chat.__isSavedMessages = false;
-      if (chat.id.valueOf() === user[0].id.value) {
+      if (chat.id.value === user[0].id.value) {
         chat.name = "Saved Messages";
         chat.entity.__isSavedMessages = true;
       }
@@ -224,12 +223,12 @@ export async function getDialogs() {
       if (chat.dialog.notifySettings.muteUntil != null) {
         chat.entity.__muted = chat.dialog.notifySettings.muteUntil;
       }
-      if (chatPreferencesTask[chat.entity.id.valueOf().toString()] == null) {
-        chatPreferencesTask[chat.entity.id.valueOf().toString()] = {};
+      if (chatPreferencesTask[chat.entity.id.value.toString()] == null) {
+        chatPreferencesTask[chat.entity.id.value.toString()] = {};
       }
-      chatPreferencesTask[chat.entity.id.valueOf().toString()]["muted"] =
+      chatPreferencesTask[chat.entity.id.value.toString()]["muted"] =
         chat.dialog.notifySettings.muteUntil || false;
-      chatPreferencesTask[chat.entity.id.valueOf().toString()]["scrollAt"] =
+      chatPreferencesTask[chat.entity.id.value.toString()]["scrollAt"] =
         chat.message.id;
       chat.iconRef = chat.id.toString();
       if (

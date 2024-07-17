@@ -3,14 +3,15 @@ import commonjs from "@rollup/plugin-commonjs";
 import nodePolyfills from "rollup-plugin-polyfill-node";
 import resolve from "@rollup/plugin-node-resolve";
 import livereload from "rollup-plugin-livereload";
-import { terser } from "rollup-plugin-terser";
-import sveltePreprocess from "svelte-preprocess";
+import terser from "@rollup/plugin-terser";
+import { sveltePreprocess } from "svelte-preprocess";
 import typescript from "@rollup/plugin-typescript";
 import css from "rollup-plugin-css-only";
-import babel from "rollup-plugin-babel";
+import babel from "@rollup/plugin-babel";
 import replace from "@rollup/plugin-replace";
 import json from "@rollup/plugin-json";
 import { config } from "dotenv";
+import { spawn } from "child_process";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -29,9 +30,9 @@ function serve() {
   return {
     writeBundle() {
       if (server) return;
-      server = require("child_process").spawn(
+      server = spawn(
         "npm",
-        ["run", "start", "--", "--dev"],
+        ["run", "start", "--", "--dev", "--port", "8000"],
         {
           stdio: ["ignore", "inherit", "inherit"],
           shell: true,
@@ -52,6 +53,7 @@ export default [
       format: "iife",
       name: "app",
       file: "public/build/bundle.js",
+      intro: 'if (global === undefined) {var global = window;}',
     },
     context: "window",
     plugins: [
@@ -92,12 +94,12 @@ export default [
       }),
       commonjs(),
       nodePolyfills({
-        include: ["events"],
+        include: ["node_modules/telegram/**/*.js"],
       }),
 
       babel({
         extensions: [".js", ".ts", ".mjs", ".html", ".svelte"],
-        runtimeHelpers: true,
+        babelHelpers: 'runtime',
         exclude: ["node_modules/@babel/**"],
         presets: [
           [
@@ -155,6 +157,7 @@ export default [
       format: "iife",
       name: "app",
       file: "public/build/authorizedWebWorker.js",
+      intro: 'if (global === undefined) {var global = window;}',
     },
     context: "window",
     plugins: [
@@ -195,12 +198,12 @@ export default [
       }),
       commonjs(),
       nodePolyfills({
-        include: ["events"],
+        include: ["node_modules/telegram/**/*.js"],
       }),
 
       babel({
         extensions: [".js", ".ts", ".mjs", ".html", ".svelte"],
-        runtimeHelpers: true,
+        babelHelpers: 'runtime',
         exclude: ["node_modules/@babel/**"],
         presets: [
           [
@@ -258,6 +261,7 @@ export default [
       format: "iife",
       name: "app",
       file: "public/build/authenticationWebWorker.js",
+      intro: 'if (global === undefined) {var global = window;}',
     },
     context: "window",
     plugins: [
@@ -298,12 +302,12 @@ export default [
       }),
       commonjs(),
       nodePolyfills({
-        include: ["events"],
+        include: ["node_modules/telegram/**/*.js"],
       }),
 
       babel({
         extensions: [".js", ".ts", ".mjs", ".html", ".svelte"],
-        runtimeHelpers: true,
+        babelHelpers: 'runtime',
         exclude: ["node_modules/@babel/**"],
         presets: [
           [

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { navigate as goto } from "svelte-navigator";
+  import { navigate as goto } from "svelte-routing";
   import { get } from "svelte/store";
   import { createKaiNavigator } from "../utils/navigation";
   import {

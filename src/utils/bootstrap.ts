@@ -1,12 +1,10 @@
+declare var telegram: any;
 declare var idb: any;
 declare var window: any;
 declare var navigator: any;
 
 import { parseUserAgent } from "./misc";
-import { Api, TelegramClient } from 'telegram';
-import { AuthKey } from 'telegram/crypto/AuthKey';
-import { StoreSession } from 'telegram/sessions';
-import { LogLevel } from 'telegram/extensions/Logger';
+import { TelegramClient as TelegramClient2 } from 'telegram';
 
 const APP_VERSION = "1.1.0";
 const UA = parseUserAgent(navigator.userAgent);
@@ -18,8 +16,11 @@ if (current == null || current !== APP_VERSION) {
   window.localStorage.removeItem("GramJs:apiCache");
 }
 
+
+const { Api, TelegramClient, AuthKey } = telegram;
+const { StoreSession } = telegram.sessions;
 const session = new StoreSession("gramjs");
-const client = new TelegramClient(
+const client: typeof TelegramClient = new TelegramClient(
   session,
   parseInt(process.env.APP_ID),
   process.env.APP_HASH,
@@ -30,7 +31,19 @@ const client = new TelegramClient(
     appVersion: UA.appVersion,
   },
 );
-client.setLogLevel(LogLevel.DEBUG);
+client.setLogLevel("none");
+
+// const client2 = new TelegramClient2(
+//   session,
+//   parseInt(process.env.APP_ID),
+//   process.env.APP_HASH,
+//   {
+//     maxConcurrentDownloads: 1,
+//     deviceModel: UA.deviceModel,
+//     systemVersion: UA.systemVersion,
+//     appVersion: UA.appVersion,
+//   },
+// );
 
 // Duplicate same instance in authorizedWebWorker and sw.js
 const cachedDatabase = idb.openDB("telekram", 5, {

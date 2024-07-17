@@ -1,7 +1,7 @@
 <svelte:options accessors immutable={true} />
 
 <script lang="ts">
-  import { navigate as goto } from "svelte-navigator";
+  import { navigate as goto } from "svelte-routing";
   import { createKaiNavigator, KaiNavigator } from "../utils/navigation";
   import { onMount, onDestroy, afterUpdate } from "svelte";
 
